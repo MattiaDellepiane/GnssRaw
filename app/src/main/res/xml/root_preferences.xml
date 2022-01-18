@@ -1,0 +1,34 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/loggers_header">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="sensors_enabled"
+            android:title="@string/enabled"
+            app:enabled="false" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/server_header">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="server_enabled"
+            android:title="@string/enabled" />
+        <EditTextPreference
+            android:defaultValue="@string/server_ip_default"
+            android:key="server_address"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/server_ip"
+            app:enabled="true" />
+        <EditTextPreference
+            android:inputType="numberDecimal"
+            android:digits="0123456789"
+            android:defaultValue="@string/server_port_default"
+            android:key="server_port"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/server_port" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

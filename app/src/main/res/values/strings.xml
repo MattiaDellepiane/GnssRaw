@@ -1,0 +1,62 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">GnssRaw</string>
+    <string name="app_version">1.0</string>
+    <string name="tab_text_1">Measurements</string>
+    <string name="tab_text_2">Plot</string>
+    <string name="tab_text_3">Settings</string>
+    <string name="require_permissions">GnssRaw needs specified permissions</string>
+
+    <!-- Home Measurements fragment-->
+    <string name="server_status_label">Server status:</string>
+    <string name="data_sending_status_label">Sending data:</string>
+    <!-- /Home Measurements fragment-->
+
+    <string name="satellite_number_sum_hint">Total Number of Visible Satellites:
+        <xliff:g id="totalNumber">%d</xliff:g></string>
+
+    <string name="current_average_hint">Current Average Of Strongest 4 Satellites:
+        <xliff:g id="currentAverage">%s</xliff:g></string>
+    <string name="history_average_hint">History Average of Strongest 4 Satellites:
+        <xliff:g id="historyAverage">%s</xliff:g></string>
+    <string-array name="plot_titles">
+        <item>CN0(dB.Hz) vs Time(s)</item>
+        <item>Pseudorange residual(m) vs Time(s)</item>
+    </string-array>
+    <string-array name="constellation_arrays">
+        <item>All</item>
+        <item>GPS</item>
+        <item>SBAS</item>
+        <item>GLONASS</item>
+        <item>QZSS</item>
+        <item>BEIDOU</item>
+        <item>GALILEO</item>
+    </string-array>
+    <string-array name="tab_arrays">
+        <item>C/N0</item>
+        <item>PR Residual</item>
+    </string-array>
+    <string name="turn_on_location_measurement">
+        No Measurement has been received yet. Please turn on \"Location and Measurements\" in Settings.
+    </string>
+    <!-- Preference Titles -->
+    <string name="measurements_header">Measurements</string>
+    <string name="loggers_header">Sensors settings</string>
+    <string name="server_header">Server settings</string>
+
+    <!-- Messages Preferences -->
+    <string name="location_measurement">Location and Measurements</string>
+    <string name="enabled">Enabled</string>
+    <string name="server_ip">Server\'s ip address</string>
+    <string name="server_port">Server port</string>
+
+    <!-- Default preferences values -->
+    <string name="server_ip_default">0.0.0.0</string>
+    <string name="server_port_default">5087</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+</resources>
