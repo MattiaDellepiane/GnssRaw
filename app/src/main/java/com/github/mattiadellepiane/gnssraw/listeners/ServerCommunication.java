@@ -33,6 +33,9 @@ public class ServerCommunication implements MeasurementListener {
     private static final char RECORD_DELIMITER = ',';
     private static final String COMMENT_START = "# ";
     private static final String VERSION_TAG = "Version: ";
+    private long lastTimeNanos = -1;
+    private String currentBlock = "";
+    private int currentBlockRawCount = 0;
 
     public ServerCommunication(SharedData data){
         this.data = data;
@@ -128,11 +131,11 @@ public class ServerCommunication implements MeasurementListener {
                 .append("Fix,Provider,Latitude,Longitude,Altitude,Speed,Accuracy,(UTC)TimeInMs")
                 .append("\n")
                 .append(COMMENT_START)
-                .append("\n")
+                /*.append("\n")
                 .append(COMMENT_START)
                 .append("Nav,Svid,Type,Status,MessageId,Sub-messageId,Data(Bytes)")
                 .append("\n")
-                .append(COMMENT_START)
+                .append(COMMENT_START)*/
                 .append("\n");
 
         out.println(header.toString());
@@ -189,7 +192,7 @@ public class ServerCommunication implements MeasurementListener {
 
     @Override
     public void onGnssNavigationMessageReceived(GnssNavigationMessage navigationMessage) {
-        StringBuilder builder = new StringBuilder("Nav");
+        /*StringBuilder builder = new StringBuilder("Nav");
         builder.append(RECORD_DELIMITER);
         builder.append(navigationMessage.getSvid());
         builder.append(RECORD_DELIMITER);
@@ -207,7 +210,7 @@ public class ServerCommunication implements MeasurementListener {
             builder.append(RECORD_DELIMITER);
             builder.append(word);
         }
-        sendMessage(builder.toString());
+        sendMessage(builder.toString());*/
     }
 
     @Override
@@ -237,10 +240,30 @@ public class ServerCommunication implements MeasurementListener {
 
     private void writeGnssMeasurementToFile(GnssClock clock, GnssMeasurement measurement)
             throws IOException {
+        //Se clock.getTimeNanos() > lastTimeNanos
+            //invio il blocco precedente con in coda FB
+            //inizializzo il nuovo blocco con in testa NB
+        //Altrimenti
+            //aggiungo la linea al blocco corrente
+        if(clock.getTimeNanos() > lastTimeNanos){
+            if(lastTimeNanos != -1){
+                sendMessage("NB," + currentBlockRawCount + "," + currentBlock + ",FB");
+            }
+            currentBlockRawCount = 1;
+            currentBlock = getEventMessage(clock, measurement);
+            lastTimeNanos = clock.getTimeNanos();
+        }
+        else{
+            currentBlock += "," + getEventMessage(clock, measurement);
+            currentBlockRawCount++;
+        }
+    }
+
+    private String getEventMessage(GnssClock clock, GnssMeasurement measurement){
         String clockStream =
                 String.format(
                         "Raw,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
-                        SystemClock.elapsedRealtime(),
+                        System.currentTimeMillis(),
                         clock.getTimeNanos(),
                         clock.hasLeapSecond() ? clock.getLeapSecond() : "",
                         clock.hasTimeUncertaintyNanos() ? clock.getTimeUncertaintyNanos() : "",
@@ -281,8 +304,7 @@ public class ServerCommunication implements MeasurementListener {
                                 ? measurement.getAutomaticGainControlLevelDb()
                                 : "");
 
-        String total = clockStream + measurementStream;
-        sendMessage(total);
+        return clockStream + measurementStream;
     }
 
     public boolean isReachable() {
