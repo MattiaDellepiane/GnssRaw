@@ -1,4 +1,4 @@
-# GnssRaw
+# GnssRaw (poi rinominerò il repository quando avremo il nuovo nome)
 
 ## Android application
 
