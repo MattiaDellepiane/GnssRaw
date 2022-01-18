@@ -1,9 +1,6 @@
 package com.github.mattiadellepiane.gnssraw.ui.main.tabs;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +19,7 @@ import java.util.concurrent.Executors;
 public class MeasurementFragment extends Fragment {
 
     private SharedData data;
-    private TextView serverStatus, isSendingData;
+    private TextView serverStatus, sendingData;
 
     public MeasurementFragment(SharedData data) {
         this.data = data;
@@ -33,19 +30,23 @@ public class MeasurementFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragment = inflater.inflate(R.layout.fragment_measurements, container, false);
         serverStatus = fragment.findViewById(R.id.serverStatus);
-        isSendingData = fragment.findViewById(R.id.isSendingData);
+        sendingData = fragment.findViewById(R.id.sendingData);
 
-        Button start = fragment.findViewById(R.id.startButton);
-        start.setOnClickListener(view -> {
-            isSendingData.setText("true");
-            isSendingData.setTextColor(getResources().getColor(R.color.green, data.getContext().getTheme()));
-            data.startMeasurements();
-        });
-        Button stop = fragment.findViewById(R.id.stopButton);
-        stop.setOnClickListener(view -> {
-            isSendingData.setText("false");
-            isSendingData.setTextColor(getResources().getColor(R.color.red, data.getContext().getTheme()));
-            data.stopMeasurements();
+        Button startStop = fragment.findViewById(R.id.startStop);
+        startStop.setOnClickListener(view -> {
+            if(data.isListeningForMeasurements()){
+                sendingData.setText("");
+                startStop.setText("START");
+                startStop.setBackgroundColor(getResources().getColor(R.color.green,data.getContext().getTheme()));
+                data.stopMeasurements();
+            }
+            else{
+                sendingData.setText(R.string.sending_data);
+                startStop.setText("STOP");
+                startStop.setBackgroundColor(getResources().getColor(R.color.red,data.getContext().getTheme()));
+                data.startMeasurements();
+            }
+
         });
 
         Button pingServerButton = fragment.findViewById(R.id.pingServerButton);
@@ -59,6 +60,8 @@ public class MeasurementFragment extends Fragment {
     }
 
     private void checkServerStatus(){
+        serverStatus.setText("pinging...");
+        serverStatus.setTextColor(getResources().getColor(R.color.black, data.getContext().getTheme()));
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         executor.execute(() -> {

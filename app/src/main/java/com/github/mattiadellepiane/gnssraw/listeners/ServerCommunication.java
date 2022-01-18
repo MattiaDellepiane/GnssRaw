@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Locale;
 
@@ -38,33 +39,37 @@ public class ServerCommunication implements MeasurementListener {
         data.setServerCommunication(this);
     }
 
-    public void startCommunication(){
-        Log.v("PROVA", "Listening: " + data.isListeningForMeasurements() + ", serverenabled" + data.isServerEnabled());
-        new Thread(()->{
+    private String getDebugTag(){
+        return data.getContext().getString(R.string.debug_tag);
+    }
 
-        if(data.isListeningForMeasurements() && data.isServerEnabled()){
-            try {
-                Log.v("PROVA", "Server ip: " + data.getServerAddress());
-                socket = new Socket(data.getServerAddress(), data.getServerPort());
-                out = new PrintWriter(socket.getOutputStream(), true);
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                startNewLog();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void startCommunication(){
+        Log.v(getDebugTag(), "Listening: " + data.isListeningForMeasurements() + ", serverenabled: " + data.isServerEnabled());
+
+        if(data.isListeningForMeasurements() && data.isServerEnabled()) {
+            new Thread(() -> {
+                try {
+                    Log.v(getDebugTag(), "Server ip: " + data.getServerAddress());
+                    socket = new Socket(data.getServerAddress(), data.getServerPort());
+                    out = new PrintWriter(socket.getOutputStream(), true);
+                    in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    startNewLog();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
         }
-        }).start();
     }
 
     private void sendMessage(String s){
         if(data.isListeningForMeasurements() && data.isServerEnabled()) {
-            Log.v("PROVA", "Invio messaggio al server");
+            Log.v(getDebugTag(), "Invio messaggio al server");
             if(out != null) {
                 new Thread(() -> {
                     out.println(s);
                 }).start();
             }
-            Log.v("PROVA", "Messaggio inviato al server");
+            Log.v(getDebugTag(), "Messaggio inviato al server");
         }
     }
 
@@ -284,7 +289,8 @@ public class ServerCommunication implements MeasurementListener {
         Socket s = null;
         boolean reachable = false;
         try {
-            s = new Socket(data.getServerAddress(), data.getServerPort());
+            s = new Socket();
+            s.connect(new InetSocketAddress(data.getServerAddress(), data.getServerPort()),3000);
             BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             PrintWriter out = new PrintWriter(s.getOutputStream(), true);
             out.println("PING");

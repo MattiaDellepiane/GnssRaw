@@ -5,10 +5,11 @@
     <string name="tab_text_2">Plot</string>
     <string name="tab_text_3">Settings</string>
     <string name="require_permissions">GnssRaw needs specified permissions</string>
+    <string name="debug_tag">com.github.dellepianemattia.gnssraw</string>
 
     <!-- Home Measurements fragment-->
     <string name="server_status_label">Server status:</string>
-    <string name="data_sending_status_label">Sending data:</string>
+    <string name="sending_data">Logging data...</string>
     <!-- /Home Measurements fragment-->
 
     <string name="satellite_number_sum_hint">Total Number of Visible Satellites:

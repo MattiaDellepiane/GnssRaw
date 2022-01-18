@@ -38,13 +38,17 @@ public class MeasurementProvider {
         this.sensorMeasurements = sensorMeasurements;
     }
 
+    private String getDebugTag(){
+        return context.getString(R.string.debug_tag);
+    }
+
     private LocationListener newLocationListener() {
         return new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
                 for (MeasurementListener listener : listeners) {
-                    Log.v("PROVA", "Fix ricevuto");
+                    Log.v(getDebugTag(), "Fix ricevuto");
                     listener.onLocationChanged(location);
                 }
             }
@@ -52,7 +56,7 @@ public class MeasurementProvider {
             @Override
             public void onStatusChanged(String s, int i, Bundle bundle) {
                 for (MeasurementListener listener : listeners) {
-                    Log.v("PROVA", "Fix cambio stato");
+                    Log.v(getDebugTag(), "Fix cambio stato");
                     listener.onLocationStatusChanged(s, i, bundle);
                 }
             }
@@ -78,7 +82,7 @@ public class MeasurementProvider {
             @Override
             public void onGnssMeasurementsReceived(GnssMeasurementsEvent event) {
                 for (MeasurementListener logger : listeners) {
-                    Log.v("PROVA", "Raw ricevuto");
+                    Log.v(getDebugTag(), "Raw ricevuto");
                     logger.onGnssMeasurementsReceived(event);
                 }
             }
@@ -86,7 +90,7 @@ public class MeasurementProvider {
             @Override
             public void onStatusChanged(int status) {
                 for (MeasurementListener logger : listeners) {
-                    Log.v("PROVA", "Raw cambio stato");
+                    Log.v(getDebugTag(), "Raw cambio stato");
                     logger.onGnssMeasurementsStatusChanged(status);
                 }
             }
@@ -98,7 +102,7 @@ public class MeasurementProvider {
             @Override
             public void onGnssNavigationMessageReceived(GnssNavigationMessage event) {
                 for (MeasurementListener logger : listeners) {
-                    Log.v("PROVA", "Nav ricevuto");
+                    Log.v(getDebugTag(), "Nav ricevuto");
                     logger.onGnssNavigationMessageReceived(event);
                 }
             }
@@ -106,7 +110,7 @@ public class MeasurementProvider {
             @Override
             public void onStatusChanged(int status) {
                 for (MeasurementListener logger : listeners) {
-                    Log.v("PROVA", "Nav cambio stato");
+                    Log.v(getDebugTag(), "Nav cambio stato");
                     logger.onGnssNavigationMessageStatusChanged(status);
                 }
             }
@@ -145,13 +149,13 @@ public class MeasurementProvider {
         registerLocation();
         locationManager.registerGnssMeasurementsCallback(gnssMeasurementsEventListener);
         locationManager.registerGnssNavigationMessageCallback(gnssNavigationMessageListener);
-        Log.v("PROVA", "Listener attivati");
+        Log.v(getDebugTag(), "Listener attivati");
     }
 
     public void unRegisterAll(){
         unregisterLocation();
         locationManager.unregisterGnssMeasurementsCallback(gnssMeasurementsEventListener);
         locationManager.unregisterGnssNavigationMessageCallback(gnssNavigationMessageListener);
-        Log.v("PROVA", "Listener disattivati");
+        Log.v(getDebugTag(), "Listener disattivati");
     }
 }
