@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
+import com.github.mattiadellepiane.gnssraw.googleutils.gnss.RealTimePositionVelocityCalculator;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.MeasurementFragment;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.PlotFragment;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.SettingsFragment;
@@ -26,11 +27,12 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     private PlotFragment pf;
     private SettingsFragment sf;
 
-    public SectionsPagerAdapter(FragmentActivity fa, SharedData data) {
+    public SectionsPagerAdapter(FragmentActivity fa, SharedData data, RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator) {
         super(fa);
         this.data = data;
         mf = new MeasurementFragment(data);
         pf = new PlotFragment();
+        mRealTimePositionVelocityCalculator.setPlotFragment(pf);
         sf = new SettingsFragment();
     }
 

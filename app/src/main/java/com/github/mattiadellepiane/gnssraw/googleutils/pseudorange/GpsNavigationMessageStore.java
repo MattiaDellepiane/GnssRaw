@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.utils.pseudorange;
+package com.github.mattiadellepiane.gnssraw.googleutils.pseudorange;
 
 import android.location.cts.nano.Ephemeris.GpsEphemerisProto;
 import android.location.cts.nano.Ephemeris.GpsNavMessageProto;

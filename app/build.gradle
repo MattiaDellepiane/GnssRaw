@@ -42,11 +42,16 @@ dependencies {
     implementation 'com.android.support:support-v13:31.+'
     implementation 'com.google.android.gms:play-services-location:11.0.2'
     implementation 'com.google.android.gms:play-services-maps:11.0.2'
+    implementation 'joda-time:joda-time:2.9.4'
 
     implementation files('libs/achartengine-1.2.0.jar')
     implementation files('libs/suplClient.jar')
     implementation files('libs/guava-22.0-android.jar')
     implementation files('libs/protobuf-nano.jar')
+    implementation files('libs/commons-codec-1.10.jar')
+    implementation files('libs/asn1-supl2.jar')
+    implementation files('libs/asn1-base.jar')
+    implementation files('libs/commons-math3-3.6.1.jar')
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
     implementation 'androidx.preference:preference:1.1.1'
 

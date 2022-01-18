@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
+import com.github.mattiadellepiane.gnssraw.googleutils.gnss.RealTimePositionVelocityCalculator;
 import com.github.mattiadellepiane.gnssraw.listeners.ServerCommunication;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private ServerCommunication serverCommunication;
+    private RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator;
 
     private SharedData data;
 
@@ -45,13 +47,20 @@ public class MainActivity extends AppCompatActivity {
 
         data = new SharedData(this);
         serverCommunication = new ServerCommunication(data);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, data);
+        //Set RealTimePositionVelocityCalculator
+        mRealTimePositionVelocityCalculator = new RealTimePositionVelocityCalculator();
+        mRealTimePositionVelocityCalculator.setMainActivity(this);
+        mRealTimePositionVelocityCalculator.setResidualPlotMode(
+                RealTimePositionVelocityCalculator.RESIDUAL_MODE_DISABLED, null /* fixedGroundTruth */);
+        //
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, data, mRealTimePositionVelocityCalculator);
         ViewPager2 viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         new TabLayoutMediator(tabs, viewPager, (tab, position) -> {
             tab.setText(sectionsPagerAdapter.TAB_TITLES[position]);
         }).attach();
+
 
         checkAndHandlePermissions();
     }
@@ -84,14 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initMeasurementProvider(){
         data.measurementProvider =
-                new MeasurementProvider(this, new SensorMeasurements(), serverCommunication);
+                new MeasurementProvider(this, new SensorMeasurements(), serverCommunication, mRealTimePositionVelocityCalculator);
     }
 
-    public void startLoggingData(View v){
-        data.startMeasurements();
-    }
-
-    public void stopLoggingData(View v){
-        data.stopMeasurements();
-    }
 }

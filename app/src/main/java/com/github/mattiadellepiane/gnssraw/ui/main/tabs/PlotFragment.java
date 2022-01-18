@@ -38,7 +38,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mattiadellepiane.gnssraw.R;
-import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsNavigationMessageStore;
+import com.github.mattiadellepiane.gnssraw.googleutils.pseudorange.GpsNavigationMessageStore;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -155,7 +155,7 @@ public class PlotFragment extends Fragment {
   /**
    *  Updates the CN0 versus Time plot data from a {@link GnssMeasurement}
    */
-  protected void updateCnoTab(GnssMeasurementsEvent event) {
+  public void updateCnoTab(GnssMeasurementsEvent event) {
     long timeInSeconds =
         TimeUnit.NANOSECONDS.toSeconds(event.getClock().getTimeNanos());
     if (mInitialTimeSeconds < 0) {
@@ -242,7 +242,7 @@ public class PlotFragment extends Fragment {
    *        are filled with pseudorange residual in meters
    * @param timeInSeconds the time at which measurements are received
    */
-  protected void updatePseudorangeResidualTab(double[] residuals, double timeInSeconds) {
+  public void updatePseudorangeResidualTab(double[] residuals, double timeInSeconds) {
     double timeSinceLastMeasurement = timeInSeconds - mInitialTimeSeconds;
     for (int i = 1; i <= GpsNavigationMessageStore.MAX_NUMBER_OF_SATELLITES; i++) {
       if (!Double.isNaN(residuals[i - 1])) {
