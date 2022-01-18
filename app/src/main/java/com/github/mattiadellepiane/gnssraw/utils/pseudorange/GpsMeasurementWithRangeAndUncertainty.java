@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.googleutils.pseudorange;
+//NOTICE: File edited (MattiaDellepiane)
+//Adjusted package name
+
+package com.github.mattiadellepiane.gnssraw.utils.pseudorange;
 
 /**
  * A container for the received GPS measurements for a single satellite.

@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.googleutils.gnss;
+//NOTICE: File edited (MattiaDellepiane)
+//Commented out the entire class since I'm not using it at the moment. Changed package name
+
+package com.github.mattiadellepiane.gnssraw.utils.gnss;
+
 
 /**
  * A map fragment to show the computed least square position and the device computed position on

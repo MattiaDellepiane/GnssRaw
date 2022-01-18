@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.googleutils.gnss;
+//NOTICE: File edited (MattiaDellepiane)
+//Removed code unused by my project, changed imports and package name
+
+package com.github.mattiadellepiane.gnssraw.utils.gnss;
 
 import android.graphics.Color;
 import android.location.GnssMeasurementsEvent;
@@ -28,9 +31,9 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.github.mattiadellepiane.gnssraw.MainActivity;
-import com.github.mattiadellepiane.gnssraw.googleutils.pseudorange.GpsMathOperations;
-import com.github.mattiadellepiane.gnssraw.googleutils.pseudorange.GpsNavigationMessageStore;
-import com.github.mattiadellepiane.gnssraw.googleutils.pseudorange.PseudorangePositionVelocityFromRealTimeEvents;
+import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsMathOperations;
+import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsNavigationMessageStore;
+import com.github.mattiadellepiane.gnssraw.utils.pseudorange.PseudorangePositionVelocityFromRealTimeEvents;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
@@ -476,7 +479,7 @@ public class RealTimePositionVelocityCalculator implements com.github.mattiadell
   }*/
 
   /**
-   * Sets {@link PlotFragment} for receiving Gnss measurement and residual computation results for
+   * Sets {link PlotFragment} for receiving Gnss measurement and residual computation results for
    * plot
    */
   public void setPlotFragment(com.github.mattiadellepiane.gnssraw.ui.main.tabs.PlotFragment plotFragment) {

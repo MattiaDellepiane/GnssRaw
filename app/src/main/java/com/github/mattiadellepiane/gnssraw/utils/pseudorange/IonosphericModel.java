@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.googleutils.pseudorange;
+//NOTICE: File edited (MattiaDellepiane)
+//Adjusted imports of artifacts and package name
 
-import com.github.mattiadellepiane.gnssraw.googleutils.pseudorange.Ecef2LlaConverter.GeodeticLlaValues;
-import com.github.mattiadellepiane.gnssraw.googleutils.pseudorange.EcefToTopocentricConverter.TopocentricAEDValues;
+package com.github.mattiadellepiane.gnssraw.utils.pseudorange;
+
+import com.github.mattiadellepiane.gnssraw.utils.pseudorange.Ecef2LlaConverter.GeodeticLlaValues;
+import com.github.mattiadellepiane.gnssraw.utils.pseudorange.EcefToTopocentricConverter.TopocentricAEDValues;
 
 /**
  * Calculates the Ionospheric correction of the pseudorange given the {@code userPosition},

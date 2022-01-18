@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.googleutils.pseudorange;
+//NOTICE: File edited (MattiaDellepiane)
+//Adjusted package name
+
+package com.github.mattiadellepiane.gnssraw.utils.pseudorange;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * An implementation of {@link com.google.location.lbs.gnss.gps.pseudorange.PseudorangeSmoother} that performs no smoothing.
+ * An implementation of {@link PseudorangeSmoother} that performs no smoothing.
  *
- * <p> A new list of {@link com.google.location.lbs.gnss.gps.pseudorange.GpsMeasurementWithRangeAndUncertainty} instances is filled with a copy
+ * <p> A new list of {@link GpsMeasurementWithRangeAndUncertainty} instances is filled with a copy
  * of the input list.
  */
 class PseudorangeNoSmoothingSmoother implements PseudorangeSmoother {

@@ -8,7 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
-import com.github.mattiadellepiane.gnssraw.googleutils.gnss.RealTimePositionVelocityCalculator;
+import com.github.mattiadellepiane.gnssraw.utils.gnss.RealTimePositionVelocityCalculator;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.MeasurementFragment;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.PlotFragment;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.SettingsFragment;

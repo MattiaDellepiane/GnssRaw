@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+//NOTICE: File edited (MattiaDellepiane)
+//Edited 2 methods access modifiers from protected to public (updateCnoTab() and updatePseudorangeResidualTab())
+
 package com.github.mattiadellepiane.gnssraw.ui.main.tabs;
 
 import androidx.fragment.app.Fragment;
@@ -38,7 +41,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mattiadellepiane.gnssraw.R;
-import com.github.mattiadellepiane.gnssraw.googleutils.pseudorange.GpsNavigationMessageStore;
+import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsNavigationMessageStore;
 
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
@@ -235,7 +238,7 @@ public class PlotFragment extends Fragment {
 
   /**
    * Updates the pseudorange residual plot from residual results calculated by
-   * {@link RealTimePositionVelocityCalculator}
+   * {link RealTimePositionVelocityCalculator}
    *
    * @param residuals An array of MAX_NUMBER_OF_SATELLITES elements where indexes of satellites was
    *        not seen are fixed with {@code Double.NaN} and indexes of satellites what were seen

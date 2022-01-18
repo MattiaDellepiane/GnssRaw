@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.googleutils.pseudorange;
+//NOTICE: File edited (MattiaDellepiane)
+//Adjusted imports of artifacts and package name
+
+package com.github.mattiadellepiane.gnssraw.utils.pseudorange;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

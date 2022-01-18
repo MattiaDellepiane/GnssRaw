@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.googleutils.pseudorange;
+//NOTICE: File edited (MattiaDellepiane)
+//Adjusted package name
+
+package com.github.mattiadellepiane.gnssraw.utils.pseudorange;
 
 import com.google.common.base.Preconditions;
-import com.github.mattiadellepiane.gnssraw.googleutils.pseudorange.UserPositionVelocityWeightedLeastSquare.SatellitesPositionPseudorangesResidualAndCovarianceMatrix;
+import com.github.mattiadellepiane.gnssraw.utils.pseudorange.UserPositionVelocityWeightedLeastSquare.SatellitesPositionPseudorangesResidualAndCovarianceMatrix;
 
 import java.util.Arrays;
 import java.util.Comparator;

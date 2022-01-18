@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.googleutils.pseudorange;
+//NOTICE: File edited (MattiaDellepiane)
+//Adjusted package name
+
+package com.github.mattiadellepiane.gnssraw.utils.pseudorange;
 
 import android.location.cts.nano.Ephemeris.GpsEphemerisProto;
 
-import com.github.mattiadellepiane.gnssraw.googleutils.pseudorange.SatelliteClockCorrectionCalculator.SatClockCorrection;
+import com.github.mattiadellepiane.gnssraw.utils.pseudorange.SatelliteClockCorrectionCalculator.SatClockCorrection;
 
 /**
  * Class to calculate GPS satellite positions from the ephemeris data

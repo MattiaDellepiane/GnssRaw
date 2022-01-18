@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package com.github.mattiadellepiane.gnssraw.googleutils.gnss;
+//NOTICE: File edited (MattiaDellepiane)
+//Adjusted imports of artifacts and package name
+
+package com.github.mattiadellepiane.gnssraw.utils.gnss;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
