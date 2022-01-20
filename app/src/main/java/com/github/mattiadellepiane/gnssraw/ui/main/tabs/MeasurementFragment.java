@@ -55,7 +55,6 @@ public class MeasurementFragment extends Fragment {
         });
 
         checkServerStatus();
-        //fragment.post(()-> checkServerStatus());
         return fragment;
     }
 

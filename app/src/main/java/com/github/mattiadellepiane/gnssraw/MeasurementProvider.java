@@ -24,14 +24,14 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssNavigationMessage;
-import android.location.GnssStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
+
+import com.github.mattiadellepiane.gnssraw.listeners.MeasurementListener;
 
 import java.util.Arrays;
 import java.util.List;
@@ -131,6 +131,7 @@ public class MeasurementProvider {
         locationManager.registerGnssMeasurementsCallback(gnssMeasurementsEventListener);
         locationManager.registerGnssNavigationMessageCallback(gnssNavigationMessageListener);
         Log.v(getDebugTag(), "Listener attivati");
+        startLogging();
     }
 
     public void unRegisterAll(){
@@ -138,5 +139,18 @@ public class MeasurementProvider {
         locationManager.unregisterGnssMeasurementsCallback(gnssMeasurementsEventListener);
         locationManager.unregisterGnssNavigationMessageCallback(gnssNavigationMessageListener);
         Log.v(getDebugTag(), "Listener disattivati");
+        stopLogging();
+    }
+
+    private void startLogging() {
+        for (MeasurementListener logger : listeners) {
+            logger.startLogging();
+        }
+    }
+
+    private void stopLogging(){
+        for (MeasurementListener logger : listeners) {
+            logger.stopLogging();
+        }
     }
 }

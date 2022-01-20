@@ -1,18 +1,8 @@
 package com.github.mattiadellepiane.gnssraw.listeners;
 
 
-import android.location.GnssClock;
-import android.location.GnssMeasurement;
-import android.location.GnssMeasurementsEvent;
-import android.location.GnssNavigationMessage;
-import android.location.GnssStatus;
-import android.location.Location;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 
-import com.github.mattiadellepiane.gnssraw.MeasurementListener;
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
 
@@ -22,20 +12,15 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Locale;
 
-public class ServerCommunication implements MeasurementListener {
+public class ServerCommunication extends MeasurementListener {
 
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private SharedData data; //address and port here
-    private static final String COMMENT_START = "# ";
-    private static final String VERSION_TAG = "Version: ";
-    private static final String CURRENT_TIME_MILLIS = "%CURRENT_TIME_MILLIS%"; //placeholder
 
     public ServerCommunication(SharedData data){
-        this.data = data;
+        super(data);
         data.setServerCommunication(this);
     }
 
@@ -43,17 +28,15 @@ public class ServerCommunication implements MeasurementListener {
         return data.getContext().getString(R.string.debug_tag);
     }
 
-    public void startCommunication(){
-        Log.v(getDebugTag(), "Listening: " + data.isListeningForMeasurements() + ", serverenabled: " + data.isServerEnabled());
-
-        if(data.isListeningForMeasurements() && data.isServerEnabled()) {
+    @Override
+    protected void initResources() {
+        if(data.isServerEnabled()) {
             new Thread(() -> {
                 try {
                     Log.v(getDebugTag(), "Server ip: " + data.getServerAddress());
                     socket = new Socket(data.getServerAddress(), data.getServerPort());
                     out = new PrintWriter(socket.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    startNewLog();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -61,7 +44,22 @@ public class ServerCommunication implements MeasurementListener {
         }
     }
 
-    private void sendMessage(String s){
+    @Override
+    protected void releaseResources() {
+        new Thread(()->{
+            if(out != null)
+                out.close();
+            try {
+                if(in != null)
+                    in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    @Override
+    protected void write(String s){
         if(data.isListeningForMeasurements() && data.isServerEnabled()) {
             Log.v(getDebugTag(), "Invio messaggio al server");
             if(out != null) {
@@ -71,175 +69,6 @@ public class ServerCommunication implements MeasurementListener {
             }
             Log.v(getDebugTag(), "Messaggio inviato al server");
         }
-    }
-
-    public void stopCommunication(){
-        if(out != null)
-            out.close();
-        try {
-            if(in != null)
-                in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void startNewLog(){
-        StringBuilder header = new StringBuilder();
-        header.append(COMMENT_START)
-                .append("\n")
-                .append(COMMENT_START)
-                .append("Header Description:")
-                .append("\n")
-                .append(COMMENT_START)
-                .append("\n")
-                .append(COMMENT_START)
-                .append(VERSION_TAG);
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        String fileVersion =
-                data.getContext().getString(R.string.app_version)
-                        + " Platform: "
-                        + Build.VERSION.RELEASE
-                        + " "
-                        + "Manufacturer: "
-                        + manufacturer
-                        + " "
-                        + "Model: "
-                        + model;
-        header.append(fileVersion)
-                .append("\n")
-                .append(COMMENT_START)
-                .append("\n")
-                .append(COMMENT_START)
-                .append("Raw,ElapsedRealtimeMillis,TimeNanos,LeapSecond,TimeUncertaintyNanos,FullBiasNanos,"
-                        + "BiasNanos,BiasUncertaintyNanos,DriftNanosPerSecond,DriftUncertaintyNanosPerSecond,"
-                        + "HardwareClockDiscontinuityCount,Svid,TimeOffsetNanos,State,ReceivedSvTimeNanos,"
-                        + "ReceivedSvTimeUncertaintyNanos,Cn0DbHz,PseudorangeRateMetersPerSecond,"
-                        + "PseudorangeRateUncertaintyMetersPerSecond,"
-                        + "AccumulatedDeltaRangeState,AccumulatedDeltaRangeMeters,"
-                        + "AccumulatedDeltaRangeUncertaintyMeters,CarrierFrequencyHz,CarrierCycles,"
-                        + "CarrierPhase,CarrierPhaseUncertainty,MultipathIndicator,SnrInDb,"
-                        + "ConstellationType,AgcDb");
-        header.append("\n")
-                .append(COMMENT_START)
-                .append("\n")
-                .append(COMMENT_START)
-                .append("Fix,Provider,Latitude,Longitude,Altitude,Speed,Accuracy,(UTC)TimeInMs")
-                .append("\n")
-                .append(COMMENT_START)
-                /*.append("\n")
-                .append(COMMENT_START)
-                .append("Nav,Svid,Type,Status,MessageId,Sub-messageId,Data(Bytes)")
-                .append("\n")
-                .append(COMMENT_START)*/
-                .append("\n");
-
-        out.println(header.toString());
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        String locationStream =
-                String.format(
-                        Locale.US,
-                        "Fix,%s,%f,%f,%f,%f,%f,%d",
-                        location.getProvider(),
-                        location.getLatitude(),
-                        location.getLongitude(),
-                        location.getAltitude(),
-                        location.getSpeed(),
-                        location.getAccuracy(),
-                        location.getTime());
-            sendMessage(locationStream);
-
-    }
-
-    @Override
-    public void onGnssMeasurementsReceived(GnssMeasurementsEvent event) {
-        GnssClock gnssClock = event.getClock();
-        String clockInfo = getClockInfo(gnssClock); //Il clock è in comune a tutti i measurement dello stesso evento eccetto per currentTimeMillis
-        StringBuilder sb = new StringBuilder("NB," + event.getMeasurements().size());
-        for (GnssMeasurement measurement : event.getMeasurements()) {
-            sb.append(",")
-              .append(clockInfo.replace(CURRENT_TIME_MILLIS, String.valueOf(System.currentTimeMillis())))
-              .append(getMeasurementInfo(measurement));
-        }
-        sb.append(",FB");
-        //Inviare
-        sendMessage(sb.toString());
-    }
-
-    @Override
-    public void onGnssNavigationMessageReceived(GnssNavigationMessage navigationMessage) {
-        /*StringBuilder builder = new StringBuilder("Nav");
-        builder.append(RECORD_DELIMITER);
-        builder.append(navigationMessage.getSvid());
-        builder.append(RECORD_DELIMITER);
-        builder.append(navigationMessage.getType());
-        builder.append(RECORD_DELIMITER);
-
-        int status = navigationMessage.getStatus();
-        builder.append(status);
-        builder.append(RECORD_DELIMITER);
-        builder.append(navigationMessage.getMessageId());
-        builder.append(RECORD_DELIMITER);
-        builder.append(navigationMessage.getSubmessageId());
-        byte[] data = navigationMessage.getData();
-        for (byte word : data) {
-            builder.append(RECORD_DELIMITER);
-            builder.append(word);
-        }
-        sendMessage(builder.toString());*/
-    }
-
-    private String getClockInfo(GnssClock clock){
-        String clockInfo = String.format(
-                    "Raw,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
-                    CURRENT_TIME_MILLIS,
-                    clock.getTimeNanos(),
-                    clock.hasLeapSecond() ? clock.getLeapSecond() : "",
-                    clock.hasTimeUncertaintyNanos() ? clock.getTimeUncertaintyNanos() : "",
-                    clock.getFullBiasNanos(),
-                    clock.hasBiasNanos() ? clock.getBiasNanos() : "",
-                    clock.hasBiasUncertaintyNanos() ? clock.getBiasUncertaintyNanos() : "",
-                    clock.hasDriftNanosPerSecond() ? clock.getDriftNanosPerSecond() : "",
-                    clock.hasDriftUncertaintyNanosPerSecond()
-                            ? clock.getDriftUncertaintyNanosPerSecond()
-                            : "",
-                    clock.getHardwareClockDiscontinuityCount() + ",");
-        return clockInfo;
-    }
-
-    private String getMeasurementInfo(GnssMeasurement measurement){
-        String measurementInfo = String.format(
-                "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
-                measurement.getSvid(),
-                measurement.getTimeOffsetNanos(),
-                measurement.getState(),
-                measurement.getReceivedSvTimeNanos(),
-                measurement.getReceivedSvTimeUncertaintyNanos(),
-                measurement.getCn0DbHz(),
-                measurement.getPseudorangeRateMetersPerSecond(),
-                measurement.getPseudorangeRateUncertaintyMetersPerSecond(),
-                measurement.getAccumulatedDeltaRangeState(),
-                measurement.getAccumulatedDeltaRangeMeters(),
-                measurement.getAccumulatedDeltaRangeUncertaintyMeters(),
-                measurement.hasCarrierFrequencyHz() ? measurement.getCarrierFrequencyHz() : "",
-                measurement.hasCarrierCycles() ? measurement.getCarrierCycles() : "",
-                measurement.hasCarrierPhase() ? measurement.getCarrierPhase() : "",
-                measurement.hasCarrierPhaseUncertainty()
-                        ? measurement.getCarrierPhaseUncertainty()
-                        : "",
-                measurement.getMultipathIndicator(),
-                measurement.hasSnrInDb() ? measurement.getSnrInDb() : "",
-                measurement.getConstellationType(),
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                        && measurement.hasAutomaticGainControlLevelDb()
-                        ? measurement.getAutomaticGainControlLevelDb()
-                        : "");
-
-        return measurementInfo;
     }
 
     public boolean isReachable() {

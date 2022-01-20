@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
+import com.github.mattiadellepiane.gnssraw.listeners.FileLogger;
 import com.github.mattiadellepiane.gnssraw.utils.gnss.RealTimePositionVelocityCalculator;
 import com.github.mattiadellepiane.gnssraw.listeners.ServerCommunication;
 import com.google.android.material.snackbar.Snackbar;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private ServerCommunication serverCommunication;
+    private FileLogger fileLogger;
     private RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator;
 
     private SharedData data;
@@ -40,8 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
         data = new SharedData(this);
         serverCommunication = new ServerCommunication(data);
+        fileLogger = new FileLogger(data);
         //Set RealTimePositionVelocityCalculator
-        mRealTimePositionVelocityCalculator = new RealTimePositionVelocityCalculator();
+        mRealTimePositionVelocityCalculator = new RealTimePositionVelocityCalculator(data);
         mRealTimePositionVelocityCalculator.setMainActivity(this);
         mRealTimePositionVelocityCalculator.setResidualPlotMode(
                 RealTimePositionVelocityCalculator.RESIDUAL_MODE_DISABLED, null /* fixedGroundTruth */);
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initMeasurementProvider(){
         data.measurementProvider =
-                new MeasurementProvider(this, new SensorMeasurements(), serverCommunication, mRealTimePositionVelocityCalculator);
+                new MeasurementProvider(this, new SensorMeasurements(), serverCommunication, fileLogger, mRealTimePositionVelocityCalculator);
     }
 
 }

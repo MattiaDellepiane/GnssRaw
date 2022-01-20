@@ -47,13 +47,11 @@ public class SharedData {
 
     public void startMeasurements(){
         setListeningForMeasurements(true);
-        serverCommunication.startCommunication();
         measurementProvider.registerAll();
     }
 
     public void stopMeasurements(){
         setListeningForMeasurements(false);
-        serverCommunication.stopCommunication();
         measurementProvider.unRegisterAll();
     }
 

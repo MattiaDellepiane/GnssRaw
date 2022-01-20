@@ -22,15 +22,15 @@ package com.github.mattiadellepiane.gnssraw.utils.gnss;
 import android.graphics.Color;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssNavigationMessage;
-import android.location.GnssStatus;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
 
 import com.github.mattiadellepiane.gnssraw.MainActivity;
+import com.github.mattiadellepiane.gnssraw.data.SharedData;
+import com.github.mattiadellepiane.gnssraw.listeners.MeasurementListener;
 import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsMathOperations;
 import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsNavigationMessageStore;
 import com.github.mattiadellepiane.gnssraw.utils.pseudorange.PseudorangePositionVelocityFromRealTimeEvents;
@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
  * computed position and velocity solutions are passed to the {link ResultFragment} to be
  * visualized.
  */
-public class RealTimePositionVelocityCalculator implements com.github.mattiadellepiane.gnssraw.MeasurementListener {
+public class RealTimePositionVelocityCalculator extends MeasurementListener {
   /** Residual analysis where user disabled residual plots */
   public static final int RESIDUAL_MODE_DISABLED = -1;
 
@@ -82,7 +82,8 @@ public class RealTimePositionVelocityCalculator implements com.github.mattiadell
   private double[] mGroundTruth = null;
   private int mPositionSolutionCount = 0;
 
-  public RealTimePositionVelocityCalculator() {
+  public RealTimePositionVelocityCalculator(SharedData data) {
+    super(data);
     mPositionVelocityCalculationHandlerThread =
         new HandlerThread("Position From Realtime Pseudoranges");
     mPositionVelocityCalculationHandlerThread.start();
@@ -509,4 +510,11 @@ public class RealTimePositionVelocityCalculator implements com.github.mattiadell
             .setCorrectedResidualComputationTruthLocationLla(null);
     }
   }
+
+  @Override
+  protected void write(String s) { }
+  @Override
+  protected void initResources() {}
+  @Override
+  protected void releaseResources() {}
 }
