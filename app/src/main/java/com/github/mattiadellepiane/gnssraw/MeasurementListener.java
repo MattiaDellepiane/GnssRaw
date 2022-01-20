@@ -10,17 +10,17 @@ import android.os.Bundle;
 
 public interface MeasurementListener {
 
-    void onProviderEnabled(String provider);
-    void onProviderDisabled(String provider);
+    //void onProviderEnabled(String provider);
+    //void onProviderDisabled(String provider);
     void onLocationChanged(Location location);
-    void onLocationStatusChanged(String provider, int status, Bundle extras);
+    //void onLocationStatusChanged(String provider, int status, Bundle extras);
 
     void onGnssMeasurementsReceived(GnssMeasurementsEvent event);
-    void onGnssMeasurementsStatusChanged(int status);
+    //void onGnssMeasurementsStatusChanged(int status);
     void onGnssNavigationMessageReceived(GnssNavigationMessage event);
-    void onGnssNavigationMessageStatusChanged(int status);
+    /*void onGnssNavigationMessageStatusChanged(int status);
     void onGnssStatusChanged(GnssStatus gnssStatus);
     void onListenerRegistration(String listener, boolean result);
     void onNmeaReceived(long l, String s);
-    void onTTFFReceived(long l);
+    void onTTFFReceived(long l);*/
 }

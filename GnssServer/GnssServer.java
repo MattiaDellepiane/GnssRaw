@@ -85,6 +85,8 @@ public class GnssServer {
                 }
                 while(mess != null){
                     System.out.println(mess);
+                    if(mess.contains(",FB"))
+                        System.out.println("-------------");
                     mess = in.readLine();
                 }
                 out.close();

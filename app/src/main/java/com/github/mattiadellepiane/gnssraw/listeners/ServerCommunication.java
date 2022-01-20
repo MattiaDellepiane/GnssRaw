@@ -30,12 +30,9 @@ public class ServerCommunication implements MeasurementListener {
     private PrintWriter out;
     private BufferedReader in;
     private SharedData data; //address and port here
-    private static final char RECORD_DELIMITER = ',';
     private static final String COMMENT_START = "# ";
     private static final String VERSION_TAG = "Version: ";
-    private long lastTimeNanos = -1;
-    private String currentBlock = "";
-    private int currentBlockRawCount = 0;
+    private static final String CURRENT_TIME_MILLIS = "%CURRENT_TIME_MILLIS%"; //placeholder
 
     public ServerCommunication(SharedData data){
         this.data = data;
@@ -142,16 +139,6 @@ public class ServerCommunication implements MeasurementListener {
     }
 
     @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
         String locationStream =
                 String.format(
@@ -169,25 +156,18 @@ public class ServerCommunication implements MeasurementListener {
     }
 
     @Override
-    public void onLocationStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
     public void onGnssMeasurementsReceived(GnssMeasurementsEvent event) {
         GnssClock gnssClock = event.getClock();
+        String clockInfo = getClockInfo(gnssClock); //Il clock è in comune a tutti i measurement dello stesso evento eccetto per currentTimeMillis
+        StringBuilder sb = new StringBuilder("NB," + event.getMeasurements().size());
         for (GnssMeasurement measurement : event.getMeasurements()) {
-            try {
-                writeGnssMeasurementToFile(gnssClock, measurement);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            sb.append(",")
+              .append(clockInfo.replace(CURRENT_TIME_MILLIS, String.valueOf(System.currentTimeMillis())))
+              .append(getMeasurementInfo(measurement));
         }
-    }
-
-    @Override
-    public void onGnssMeasurementsStatusChanged(int status) {
-
+        sb.append(",FB");
+        //Inviare
+        sendMessage(sb.toString());
     }
 
     @Override
@@ -213,98 +193,53 @@ public class ServerCommunication implements MeasurementListener {
         sendMessage(builder.toString());*/
     }
 
-    @Override
-    public void onGnssNavigationMessageStatusChanged(int status) {
-
+    private String getClockInfo(GnssClock clock){
+        String clockInfo = String.format(
+                    "Raw,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+                    CURRENT_TIME_MILLIS,
+                    clock.getTimeNanos(),
+                    clock.hasLeapSecond() ? clock.getLeapSecond() : "",
+                    clock.hasTimeUncertaintyNanos() ? clock.getTimeUncertaintyNanos() : "",
+                    clock.getFullBiasNanos(),
+                    clock.hasBiasNanos() ? clock.getBiasNanos() : "",
+                    clock.hasBiasUncertaintyNanos() ? clock.getBiasUncertaintyNanos() : "",
+                    clock.hasDriftNanosPerSecond() ? clock.getDriftNanosPerSecond() : "",
+                    clock.hasDriftUncertaintyNanosPerSecond()
+                            ? clock.getDriftUncertaintyNanosPerSecond()
+                            : "",
+                    clock.getHardwareClockDiscontinuityCount() + ",");
+        return clockInfo;
     }
 
-    @Override
-    public void onGnssStatusChanged(GnssStatus gnssStatus) {
+    private String getMeasurementInfo(GnssMeasurement measurement){
+        String measurementInfo = String.format(
+                "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
+                measurement.getSvid(),
+                measurement.getTimeOffsetNanos(),
+                measurement.getState(),
+                measurement.getReceivedSvTimeNanos(),
+                measurement.getReceivedSvTimeUncertaintyNanos(),
+                measurement.getCn0DbHz(),
+                measurement.getPseudorangeRateMetersPerSecond(),
+                measurement.getPseudorangeRateUncertaintyMetersPerSecond(),
+                measurement.getAccumulatedDeltaRangeState(),
+                measurement.getAccumulatedDeltaRangeMeters(),
+                measurement.getAccumulatedDeltaRangeUncertaintyMeters(),
+                measurement.hasCarrierFrequencyHz() ? measurement.getCarrierFrequencyHz() : "",
+                measurement.hasCarrierCycles() ? measurement.getCarrierCycles() : "",
+                measurement.hasCarrierPhase() ? measurement.getCarrierPhase() : "",
+                measurement.hasCarrierPhaseUncertainty()
+                        ? measurement.getCarrierPhaseUncertainty()
+                        : "",
+                measurement.getMultipathIndicator(),
+                measurement.hasSnrInDb() ? measurement.getSnrInDb() : "",
+                measurement.getConstellationType(),
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+                        && measurement.hasAutomaticGainControlLevelDb()
+                        ? measurement.getAutomaticGainControlLevelDb()
+                        : "");
 
-    }
-
-    @Override
-    public void onListenerRegistration(String listener, boolean result) {
-
-    }
-
-    @Override
-    public void onNmeaReceived(long l, String s) {
-
-    }
-
-    @Override
-    public void onTTFFReceived(long l) {
-
-    }
-
-    private void writeGnssMeasurementToFile(GnssClock clock, GnssMeasurement measurement)
-            throws IOException {
-        //Se clock.getTimeNanos() > lastTimeNanos
-            //invio il blocco precedente con in coda FB
-            //inizializzo il nuovo blocco con in testa NB
-        //Altrimenti
-            //aggiungo la linea al blocco corrente
-        if(clock.getTimeNanos() > lastTimeNanos){
-            if(lastTimeNanos != -1){
-                sendMessage("NB," + currentBlockRawCount + "," + currentBlock + ",FB");
-            }
-            currentBlockRawCount = 1;
-            currentBlock = getEventMessage(clock, measurement);
-            lastTimeNanos = clock.getTimeNanos();
-        }
-        else{
-            currentBlock += "," + getEventMessage(clock, measurement);
-            currentBlockRawCount++;
-        }
-    }
-
-    private String getEventMessage(GnssClock clock, GnssMeasurement measurement){
-        String clockStream =
-                String.format(
-                        "Raw,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
-                        System.currentTimeMillis(),
-                        clock.getTimeNanos(),
-                        clock.hasLeapSecond() ? clock.getLeapSecond() : "",
-                        clock.hasTimeUncertaintyNanos() ? clock.getTimeUncertaintyNanos() : "",
-                        clock.getFullBiasNanos(),
-                        clock.hasBiasNanos() ? clock.getBiasNanos() : "",
-                        clock.hasBiasUncertaintyNanos() ? clock.getBiasUncertaintyNanos() : "",
-                        clock.hasDriftNanosPerSecond() ? clock.getDriftNanosPerSecond() : "",
-                        clock.hasDriftUncertaintyNanosPerSecond()
-                                ? clock.getDriftUncertaintyNanosPerSecond()
-                                : "",
-                        clock.getHardwareClockDiscontinuityCount() + ",");
-
-        String measurementStream =
-                String.format(
-                        "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",
-                        measurement.getSvid(),
-                        measurement.getTimeOffsetNanos(),
-                        measurement.getState(),
-                        measurement.getReceivedSvTimeNanos(),
-                        measurement.getReceivedSvTimeUncertaintyNanos(),
-                        measurement.getCn0DbHz(),
-                        measurement.getPseudorangeRateMetersPerSecond(),
-                        measurement.getPseudorangeRateUncertaintyMetersPerSecond(),
-                        measurement.getAccumulatedDeltaRangeState(),
-                        measurement.getAccumulatedDeltaRangeMeters(),
-                        measurement.getAccumulatedDeltaRangeUncertaintyMeters(),
-                        measurement.hasCarrierFrequencyHz() ? measurement.getCarrierFrequencyHz() : "",
-                        measurement.hasCarrierCycles() ? measurement.getCarrierCycles() : "",
-                        measurement.hasCarrierPhase() ? measurement.getCarrierPhase() : "",
-                        measurement.hasCarrierPhaseUncertainty()
-                                ? measurement.getCarrierPhaseUncertainty()
-                                : "",
-                        measurement.getMultipathIndicator(),
-                        measurement.hasSnrInDb() ? measurement.getSnrInDb() : "",
-                        measurement.getConstellationType(),
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-                                && measurement.hasAutomaticGainControlLevelDb()
-                                ? measurement.getAutomaticGainControlLevelDb()
-                                : "");
-
-        return clockStream + measurementStream;
+        return measurementInfo;
     }
 
     public boolean isReachable() {

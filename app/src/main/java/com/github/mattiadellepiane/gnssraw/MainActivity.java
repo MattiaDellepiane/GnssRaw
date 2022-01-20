@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, data, mRealTimePositionVelocityCalculator);
         ViewPager2 viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setOffscreenPageLimit(3); //Preload fragments (it also solves crashes if start button is clicked before visiting the plot fragment)
         TabLayout tabs = binding.tabs;
         new TabLayoutMediator(tabs, viewPager, (tab, position) -> {
             tab.setText(sectionsPagerAdapter.TAB_TITLES[position]);

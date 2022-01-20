@@ -71,28 +71,6 @@ public class MeasurementProvider {
                     listener.onLocationChanged(location);
                 }
             }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-                for (MeasurementListener listener : listeners) {
-                    Log.v(getDebugTag(), "Fix cambio stato");
-                    listener.onLocationStatusChanged(s, i, bundle);
-                }
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-                for (MeasurementListener listener : listeners) {
-                    listener.onProviderEnabled(s);
-                }
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-                for (MeasurementListener listener : listeners) {
-                    listener.onProviderDisabled(s);
-                }
-            }
         };
     }
 
@@ -105,14 +83,6 @@ public class MeasurementProvider {
                     logger.onGnssMeasurementsReceived(event);
                 }
             }
-
-            @Override
-            public void onStatusChanged(int status) {
-                for (MeasurementListener logger : listeners) {
-                    Log.v(getDebugTag(), "Raw cambio stato");
-                    logger.onGnssMeasurementsStatusChanged(status);
-                }
-            }
         };
     }
 
@@ -123,14 +93,6 @@ public class MeasurementProvider {
                 for (MeasurementListener logger : listeners) {
                     Log.v(getDebugTag(), "Nav ricevuto");
                     logger.onGnssNavigationMessageReceived(event);
-                }
-            }
-
-            @Override
-            public void onStatusChanged(int status) {
-                for (MeasurementListener logger : listeners) {
-                    Log.v(getDebugTag(), "Nav cambio stato");
-                    logger.onGnssNavigationMessageStatusChanged(status);
                 }
             }
         };

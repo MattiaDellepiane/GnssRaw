@@ -108,15 +108,6 @@ public class RealTimePositionVelocityCalculator implements com.github.mattiadell
     mMyPositionVelocityCalculationHandler.post(r);
   }
 
-  @Override
-  public void onProviderEnabled(String provider) {}
-
-  @Override
-  public void onProviderDisabled(String provider) {}
-
-  @Override
-  public void onGnssStatusChanged(GnssStatus gnssStatus) {}
-
   /**
    * Update the reference location in {@link PseudorangePositionVelocityFromRealTimeEvents} if the
    * received location is a network location. Otherwise, update the {link ResultFragment} to
@@ -276,9 +267,6 @@ public class RealTimePositionVelocityCalculator implements com.github.mattiadell
   }*/
 
   @Override
-  public void onLocationStatusChanged(String provider, int status, Bundle extras) {}
-
-  @Override
   public void onGnssMeasurementsReceived(final GnssMeasurementsEvent event) {
     mAllowShowingRawResults = true;
     final Runnable r =
@@ -344,23 +332,11 @@ public class RealTimePositionVelocityCalculator implements com.github.mattiadell
   }
 
   @Override
-  public void onGnssMeasurementsStatusChanged(int status) {}
-
-  @Override
   public void onGnssNavigationMessageReceived(GnssNavigationMessage event) {
     if (event.getType() == GnssNavigationMessage.TYPE_GPS_L1CA) {
       mPseudorangePositionVelocityFromRealTimeEvents.parseHwNavigationMessageUpdates(event);
     }
   }
-
-  @Override
-  public void onGnssNavigationMessageStatusChanged(int status) {}
-
-  @Override
-  public void onNmeaReceived(long l, String s) {}
-
-  @Override
-  public void onListenerRegistration(String listener, boolean result) {}
 
   private void logEvent(String tag, String message, int color) {
     String composedTag = /*MeasurementProvider.TAG + */ tag;
@@ -533,7 +509,4 @@ public class RealTimePositionVelocityCalculator implements com.github.mattiadell
             .setCorrectedResidualComputationTruthLocationLla(null);
     }
   }
-
-  @Override
-  public void onTTFFReceived(long l) {}
 }
