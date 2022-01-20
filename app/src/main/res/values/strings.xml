@@ -37,7 +37,7 @@
         <item>PR Residual</item>
     </string-array>
     <string name="turn_on_location_measurement">
-        No Measurement has been received yet. Please turn on \"Location and Measurements\" in Settings.
+        No Measurement has been received yet. Please start a measurement.
     </string>
     <!-- Preference Titles -->
     <string name="measurements_header">Measurements</string>

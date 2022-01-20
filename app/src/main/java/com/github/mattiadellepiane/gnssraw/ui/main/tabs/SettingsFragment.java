@@ -26,11 +26,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             serverEditText.setEnabled(false);
             serverPort.setEnabled(false);
         }
-        /*if(preferences.getString("server_address", "").equalsIgnoreCase("true")) {
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("server_address", getString(R.string.server_ip_default));
-            editor.apply();
-        }*/
     }
 
     private void setServerSwitchListener(){
