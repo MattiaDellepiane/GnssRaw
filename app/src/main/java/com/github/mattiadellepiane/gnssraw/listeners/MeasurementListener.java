@@ -4,12 +4,8 @@ import android.location.GnssClock;
 import android.location.GnssMeasurement;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssNavigationMessage;
-import android.location.GnssStatus;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.OnNmeaMessageListener;
 import android.os.Build;
-import android.os.Bundle;
 
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;

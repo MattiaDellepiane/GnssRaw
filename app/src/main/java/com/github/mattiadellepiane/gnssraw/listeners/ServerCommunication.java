@@ -12,15 +12,19 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ServerCommunication extends MeasurementListener {
 
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+    private ExecutorService executor;
 
     public ServerCommunication(SharedData data){
         super(data);
+        executor = Executors.newSingleThreadExecutor();
         data.setServerCommunication(this);
     }
 
@@ -31,22 +35,23 @@ public class ServerCommunication extends MeasurementListener {
     @Override
     protected void initResources() {
         if(data.isServerEnabled()) {
-            new Thread(() -> {
+            executor.execute(() -> {
                 try {
                     Log.v(getDebugTag(), "Server ip: " + data.getServerAddress());
                     socket = new Socket(data.getServerAddress(), data.getServerPort());
                     out = new PrintWriter(socket.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    Log.v("PROVA", "risorse inizializzate");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }).start();
+            });
         }
     }
 
     @Override
     protected void releaseResources() {
-        new Thread(()->{
+        executor.execute(()->{
             if(out != null)
                 out.close();
             try {
@@ -55,18 +60,20 @@ public class ServerCommunication extends MeasurementListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }).start();
+        });
     }
 
     @Override
     protected void write(String s){
         if(data.isListeningForMeasurements() && data.isServerEnabled()) {
             Log.v(getDebugTag(), "Invio messaggio al server");
-            if(out != null) {
-                new Thread(() -> {
+            executor.execute(() -> {
+                if(out != null) {
+                    if(s.contains("#"))
+                        Log.v("PROVA", "invio header");
                     out.println(s);
-                }).start();
-            }
+                }
+            });
             Log.v(getDebugTag(), "Messaggio inviato al server");
         }
     }
