@@ -20,9 +20,11 @@ public class MeasurementFragment extends Fragment {
 
     private SharedData data;
     private TextView serverStatus, sendingData;
+    private PlotFragment plotFragment;
 
-    public MeasurementFragment(SharedData data) {
+    public MeasurementFragment(SharedData data, PlotFragment plotFragment) {
         this.data = data;
+        this.plotFragment = plotFragment;
     }
 
 
@@ -44,6 +46,7 @@ public class MeasurementFragment extends Fragment {
                 sendingData.setText(R.string.sending_data);
                 startStop.setText("STOP");
                 startStop.setBackgroundColor(getResources().getColor(R.color.red,data.getContext().getTheme()));
+                plotFragment.restartChart();
                 data.startMeasurements();
             }
 

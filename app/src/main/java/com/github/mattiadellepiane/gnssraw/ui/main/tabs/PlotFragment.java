@@ -16,6 +16,7 @@
 
 //NOTICE: File edited (MattiaDellepiane)
 //Edited 2 methods access modifiers from protected to public (updateCnoTab() and updatePseudorangeResidualTab())
+//and added method to restart the chart view
 
 package com.github.mattiadellepiane.gnssraw.ui.main.tabs;
 
@@ -104,6 +105,7 @@ public class PlotFragment extends Fragment {
   private XYMultipleSeriesRenderer mCurrentRenderer;
   private LinearLayout mLayout;
   private int mCurrentTab = 0;
+  private Spinner tabSpinner, spinner;
 
   @Override
   public View onCreateView(
@@ -114,8 +116,8 @@ public class PlotFragment extends Fragment {
         = new DataSetManager(NUMBER_OF_TABS, NUMBER_OF_CONSTELLATIONS, getContext(), mColorMap);
 
     // Set UI elements handlers
-    final Spinner spinner = plotView.findViewById(R.id.constellation_spinner);
-    final Spinner tabSpinner = plotView.findViewById(R.id.tab_spinner);
+    spinner = plotView.findViewById(R.id.constellation_spinner);
+    tabSpinner = plotView.findViewById(R.id.tab_spinner);
 
     OnItemSelectedListener spinnerOnSelectedListener = new OnItemSelectedListener() {
 
@@ -153,6 +155,30 @@ public class PlotFragment extends Fragment {
     mLayout = plotView.findViewById(R.id.plot);
     mLayout.addView(mChartView);
     return plotView;
+  }
+
+  public void restartChart(){
+
+    if (mChartView != null) {
+      mLayout.removeView(mChartView);
+    }
+    mDataSetManager
+            = new DataSetManager(NUMBER_OF_TABS, NUMBER_OF_CONSTELLATIONS, getContext(), mColorMap);
+    XYMultipleSeriesDataset currentDataSet
+            = mDataSetManager.getDataSet(mCurrentTab, DATA_SET_INDEX_ALL);
+    mCurrentTab = tabSpinner.getSelectedItemPosition();
+    XYMultipleSeriesRenderer renderer
+            = mDataSetManager.getRenderer(mCurrentTab, spinner.getSelectedItemPosition());
+    XYMultipleSeriesDataset dataSet
+            = mDataSetManager.getDataSet(mCurrentTab, spinner.getSelectedItemPosition());
+    if (mLastTimeReceivedSeconds > TIME_INTERVAL_SECONDS) {
+      renderer.setXAxisMax(mLastTimeReceivedSeconds);
+      renderer.setXAxisMin(mLastTimeReceivedSeconds - TIME_INTERVAL_SECONDS);
+    }
+    mCurrentRenderer = renderer;
+    mChartView = ChartFactory.getLineChartView(getContext(), dataSet, mCurrentRenderer);
+
+    mLayout.addView(mChartView);
   }
 
   /**

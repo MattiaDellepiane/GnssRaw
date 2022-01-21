@@ -30,8 +30,8 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     public SectionsPagerAdapter(FragmentActivity fa, SharedData data, RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator) {
         super(fa);
         this.data = data;
-        mf = new MeasurementFragment(data);
         pf = new PlotFragment();
+        mf = new MeasurementFragment(data, pf);
         mRealTimePositionVelocityCalculator.setPlotFragment(pf);
         sf = new SettingsFragment();
     }
