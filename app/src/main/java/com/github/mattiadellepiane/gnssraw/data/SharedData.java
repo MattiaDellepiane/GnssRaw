@@ -8,6 +8,7 @@ import androidx.preference.PreferenceManager;
 import com.github.mattiadellepiane.gnssraw.MeasurementProvider;
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.listeners.ServerCommunication;
+import com.github.mattiadellepiane.gnssraw.ui.main.tabs.FilesFragment;
 
 /*
 Shared data between the three fragments (immune to views lifecycles)
@@ -20,10 +21,19 @@ public class SharedData {
     private boolean listeningForMeasurements = false;
     SharedPreferences preferences;
     private ServerCommunication serverCommunication;
+    private FilesFragment filesFragment;
 
     public SharedData(Context context){
         this.context = context;
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public FilesFragment getFilesFragment(){
+        return filesFragment;
+    }
+
+    public void setFilesFragment(FilesFragment filesFragment){
+        this.filesFragment = filesFragment;
     }
 
     public Context getContext(){
@@ -74,5 +84,4 @@ public class SharedData {
         }
         return port;
     }
-
 }

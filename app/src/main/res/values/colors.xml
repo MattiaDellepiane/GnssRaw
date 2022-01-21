@@ -10,4 +10,5 @@
 
     <color name="green">#FF009900</color>
     <color name="red">#FFFF0000</color>
+    <color name="dividerColor">#FF000000</color>
 </resources>

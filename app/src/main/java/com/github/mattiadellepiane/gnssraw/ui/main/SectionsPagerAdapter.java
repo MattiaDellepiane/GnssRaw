@@ -8,6 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
+import com.github.mattiadellepiane.gnssraw.ui.main.tabs.FilesFragment;
 import com.github.mattiadellepiane.gnssraw.utils.gnss.RealTimePositionVelocityCalculator;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.MeasurementFragment;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.PlotFragment;
@@ -20,12 +21,13 @@ import com.github.mattiadellepiane.gnssraw.ui.main.tabs.SettingsFragment;
 public class SectionsPagerAdapter extends FragmentStateAdapter {
 
     @StringRes
-    public static final int[] TAB_TITLES = new int[] {R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
+    public static final int[] TAB_TITLES = new int[] {R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4};
 
     private final SharedData data;
     private MeasurementFragment mf;
     private PlotFragment pf;
     private SettingsFragment sf;
+    private FilesFragment ff;
 
     public SectionsPagerAdapter(FragmentActivity fa, SharedData data, RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator) {
         super(fa);
@@ -34,6 +36,8 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
         mf = new MeasurementFragment(data, pf);
         mRealTimePositionVelocityCalculator.setPlotFragment(pf);
         sf = new SettingsFragment();
+        ff = new FilesFragment();
+        data.setFilesFragment(ff);
     }
 
     @NonNull
@@ -45,6 +49,8 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
             case 1:
                 return pf;
             case 2:
+                return ff;
+            case 3:
                 return sf;
         }
         return null;
@@ -52,7 +58,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 4;
     }
 
 }

@@ -3,9 +3,11 @@
     <string name="app_version">1.0</string>
     <string name="tab_text_1">Measurements</string>
     <string name="tab_text_2">Plot</string>
-    <string name="tab_text_3">Settings</string>
+    <string name="tab_text_3">Files</string>
+    <string name="tab_text_4">Settings</string>
     <string name="require_permissions">GnssRaw needs specified permissions</string>
     <string name="debug_tag">com.github.dellepianemattia.gnssraw</string>
+    <string name="app_documents_folder">/GnssRaw</string>
 
     <!-- Home Measurements fragment-->
     <string name="server_status_label">Server status:</string>
@@ -60,4 +62,6 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -3,6 +3,7 @@ package com.github.mattiadellepiane.gnssraw.listeners;
 import android.icu.text.SimpleDateFormat;
 import android.os.Environment;
 
+import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
 
 import java.io.File;
@@ -14,17 +15,20 @@ public class FileLogger extends MeasurementListener{
 
     private PrintWriter out;
     private File file;
-    private final String FILE_NAME = "/GnssRaw/GNSS_Log";
+    private final String FOLDER;
+    private String currentFileName;
 
     public FileLogger(SharedData data){
         super(data);
+        FOLDER = data.getContext().getString(R.string.app_documents_folder);
     }
 
     @Override
     protected void initResources() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-        Date now = new Date();
-        String fileName = String.format(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "%s_%s.txt", FILE_NAME, formatter.format(now));
+        String now = formatter.format(new Date());
+        String fileName = String.format(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "%s_%s.txt", FOLDER + "/GNSS_Log", now);
+        currentFileName = "GNSS_Log_" + now + ".txt";
         file = createFile(fileName);
         try {
             out = new PrintWriter(file);
@@ -37,6 +41,8 @@ public class FileLogger extends MeasurementListener{
     protected void releaseResources() {
         if(out != null)
             out.close();
+        if(data.getFilesFragment() != null)
+            data.getFilesFragment().addFileView(currentFileName);
     }
 
     @Override

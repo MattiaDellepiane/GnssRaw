@@ -4,10 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_files.xml" value="0.36666666666666664" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_main.xml" value="0.36666666666666664" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_measurements.xml" value="0.33" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_plot.xml" value="0.36666666666666664" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_settings.xml" value="0.36666666666666664" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/xml/provider_paths.xml" value="0.2015625" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/xml/root_preferences.xml" value="0.36666666666666664" />
       </map>
     </option>
