@@ -22,23 +22,22 @@ public class ServerCommunication extends MeasurementListener {
     private BufferedReader in;
     private ExecutorService executor;
 
-    public ServerCommunication(SharedData data){
-        super(data);
+    public ServerCommunication(){
         executor = Executors.newSingleThreadExecutor();
-        data.setServerCommunication(this);
+        SharedData.getInstance().setServerCommunication(this);
     }
 
     private String getDebugTag(){
-        return data.getContext().getString(R.string.debug_tag);
+        return SharedData.getInstance().getContext().getString(R.string.debug_tag);
     }
 
     @Override
     protected void initResources() {
-        if(data.isServerEnabled()) {
+        if(SharedData.getInstance().isServerEnabled()) {
             executor.execute(() -> {
                 try {
-                    Log.v(getDebugTag(), "Server ip: " + data.getServerAddress());
-                    socket = new Socket(data.getServerAddress(), data.getServerPort());
+                    Log.v(getDebugTag(), "Server ip: " + SharedData.getInstance().getServerAddress());
+                    socket = new Socket(SharedData.getInstance().getServerAddress(), SharedData.getInstance().getServerPort());
                     out = new PrintWriter(socket.getOutputStream(), true);
                     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     Log.v("PROVA", "risorse inizializzate");
@@ -65,7 +64,7 @@ public class ServerCommunication extends MeasurementListener {
 
     @Override
     protected void write(String s){
-        if(data.isListeningForMeasurements() && data.isServerEnabled()) {
+        if(SharedData.getInstance().isListeningForMeasurements() && SharedData.getInstance().isServerEnabled()) {
             Log.v(getDebugTag(), "Invio messaggio al server");
             executor.execute(() -> {
                 if(out != null) {
@@ -83,7 +82,7 @@ public class ServerCommunication extends MeasurementListener {
         boolean reachable = false;
         try {
             s = new Socket();
-            s.connect(new InetSocketAddress(data.getServerAddress(), data.getServerPort()),3000);
+            s.connect(new InetSocketAddress(SharedData.getInstance().getServerAddress(), SharedData.getInstance().getServerPort()),3000);
             BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             PrintWriter out = new PrintWriter(s.getOutputStream(), true);
             out.println("PING");

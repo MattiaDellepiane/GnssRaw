@@ -29,7 +29,6 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.github.mattiadellepiane.gnssraw.MainActivity;
-import com.github.mattiadellepiane.gnssraw.data.SharedData;
 import com.github.mattiadellepiane.gnssraw.listeners.MeasurementListener;
 import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsMathOperations;
 import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsNavigationMessageStore;
@@ -82,8 +81,7 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
   private double[] mGroundTruth = null;
   private int mPositionSolutionCount = 0;
 
-  public RealTimePositionVelocityCalculator(SharedData data) {
-    super(data);
+  public RealTimePositionVelocityCalculator() {
     mPositionVelocityCalculationHandlerThread =
         new HandlerThread("Position From Realtime Pseudoranges");
     mPositionVelocityCalculationHandlerThread.start();

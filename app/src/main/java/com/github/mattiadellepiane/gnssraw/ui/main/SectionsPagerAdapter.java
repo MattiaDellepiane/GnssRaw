@@ -23,21 +23,19 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     @StringRes
     public static final int[] TAB_TITLES = new int[] {R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4};
 
-    private final SharedData data;
     private MeasurementFragment mf;
     private PlotFragment pf;
     private SettingsFragment sf;
     private FilesFragment ff;
 
-    public SectionsPagerAdapter(FragmentActivity fa, SharedData data, RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator) {
+    public SectionsPagerAdapter(FragmentActivity fa, RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator) {
         super(fa);
-        this.data = data;
         pf = new PlotFragment();
-        mf = new MeasurementFragment(data, pf);
+        mf = new MeasurementFragment(pf);
         mRealTimePositionVelocityCalculator.setPlotFragment(pf);
         sf = new SettingsFragment();
         ff = new FilesFragment();
-        data.setFilesFragment(ff);
+        SharedData.getInstance().setFilesFragment(ff);
     }
 
     @NonNull

@@ -18,9 +18,8 @@ public class FileLogger extends MeasurementListener{
     private final String FOLDER;
     private String currentFileName;
 
-    public FileLogger(SharedData data){
-        super(data);
-        FOLDER = data.getContext().getString(R.string.app_documents_folder);
+    public FileLogger(){
+        FOLDER = SharedData.getInstance().getContext().getString(R.string.app_documents_folder);
     }
 
     @Override
@@ -41,8 +40,8 @@ public class FileLogger extends MeasurementListener{
     protected void releaseResources() {
         if(out != null)
             out.close();
-        if(data.getFilesFragment() != null)
-            data.getFilesFragment().addFileView(currentFileName);
+        if(SharedData.getInstance().getFilesFragment() != null)
+            SharedData.getInstance().getFilesFragment().addFileView(currentFileName);
     }
 
     @Override

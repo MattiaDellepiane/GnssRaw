@@ -14,14 +14,10 @@ import java.util.Locale;
 
 public abstract class MeasurementListener {
 
-    protected SharedData data;
     private static final String COMMENT_START = "# ";
     private static final String VERSION_TAG = "Version: ";
     private static final String CURRENT_TIME_MILLIS = "%CURRENT_TIME_MILLIS%"; //placeholder
 
-    protected MeasurementListener(SharedData data){
-        this.data = data;
-    }
 
     protected abstract void initResources();
     protected abstract void releaseResources();
@@ -150,7 +146,7 @@ public abstract class MeasurementListener {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
         String fileVersion =
-                data.getContext().getString(R.string.app_version)
+                SharedData.getInstance().getContext().getString(R.string.app_version)
                         + " Platform: "
                         + Build.VERSION.RELEASE
                         + " "

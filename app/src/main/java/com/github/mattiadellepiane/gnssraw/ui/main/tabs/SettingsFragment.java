@@ -9,7 +9,6 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
 
 import com.github.mattiadellepiane.gnssraw.R;
-import com.github.mattiadellepiane.gnssraw.data.SharedData;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 

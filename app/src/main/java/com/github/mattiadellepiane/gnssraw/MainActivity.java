@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private FileLogger fileLogger;
     private RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator;
 
-    private SharedData data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +39,16 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        data = new SharedData(this);
-        serverCommunication = new ServerCommunication(data);
-        fileLogger = new FileLogger(data);
+        SharedData.getInstance().setContext(this.getApplicationContext());
+        serverCommunication = new ServerCommunication();
+        fileLogger = new FileLogger();
         //Set RealTimePositionVelocityCalculator
-        mRealTimePositionVelocityCalculator = new RealTimePositionVelocityCalculator(data);
+        mRealTimePositionVelocityCalculator = new RealTimePositionVelocityCalculator();
         mRealTimePositionVelocityCalculator.setMainActivity(this);
         mRealTimePositionVelocityCalculator.setResidualPlotMode(
                 RealTimePositionVelocityCalculator.RESIDUAL_MODE_DISABLED, null /* fixedGroundTruth */);
         //
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, data, mRealTimePositionVelocityCalculator);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, mRealTimePositionVelocityCalculator);
         ViewPager2 viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setOffscreenPageLimit(4); //Preload fragments (it also solves crashes if start button is clicked before visiting the plot fragment)
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initMeasurementProvider(){
-        data.measurementProvider =
+        SharedData.getInstance().measurementProvider =
                 new MeasurementProvider(this, new SensorMeasurements(), serverCommunication, fileLogger, mRealTimePositionVelocityCalculator);
     }
 

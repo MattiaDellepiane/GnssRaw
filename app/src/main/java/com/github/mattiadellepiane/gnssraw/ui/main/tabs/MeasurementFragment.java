@@ -18,12 +18,10 @@ import java.util.concurrent.Executors;
 
 public class MeasurementFragment extends Fragment {
 
-    private SharedData data;
     private TextView serverStatus, sendingData;
     private PlotFragment plotFragment;
 
-    public MeasurementFragment(SharedData data, PlotFragment plotFragment) {
-        this.data = data;
+    public MeasurementFragment(PlotFragment plotFragment) {
         this.plotFragment = plotFragment;
     }
 
@@ -36,18 +34,18 @@ public class MeasurementFragment extends Fragment {
 
         Button startStop = fragment.findViewById(R.id.startStop);
         startStop.setOnClickListener(view -> {
-            if(data.isListeningForMeasurements()){
+            if(SharedData.getInstance().isListeningForMeasurements()){
                 sendingData.setText("");
                 startStop.setText("START");
-                startStop.setBackgroundColor(getResources().getColor(R.color.green,data.getContext().getTheme()));
-                data.stopMeasurements();
+                startStop.setBackgroundColor(getResources().getColor(R.color.green,SharedData.getInstance().getContext().getTheme()));
+                SharedData.getInstance().stopMeasurements();
             }
             else{
                 sendingData.setText(R.string.sending_data);
                 startStop.setText("STOP");
-                startStop.setBackgroundColor(getResources().getColor(R.color.red,data.getContext().getTheme()));
+                startStop.setBackgroundColor(getResources().getColor(R.color.red,SharedData.getInstance().getContext().getTheme()));
                 plotFragment.restartChart();
-                data.startMeasurements();
+                SharedData.getInstance().startMeasurements();
             }
 
         });
@@ -63,19 +61,19 @@ public class MeasurementFragment extends Fragment {
 
     private void checkServerStatus(){
         serverStatus.setText("pinging...");
-        serverStatus.setTextColor(getResources().getColor(R.color.black, data.getContext().getTheme()));
+        serverStatus.setTextColor(getResources().getColor(R.color.black, SharedData.getInstance().getContext().getTheme()));
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         executor.execute(() -> {
-            boolean reachable = data.getServerCommunication().isReachable(); //network operation
+            boolean reachable = SharedData.getInstance().getServerCommunication().isReachable(); //network operation
             getActivity().runOnUiThread(()->{
                 if(reachable){
                     serverStatus.setText("reachable");
-                    serverStatus.setTextColor(getResources().getColor(R.color.green, data.getContext().getTheme()));
+                    serverStatus.setTextColor(getResources().getColor(R.color.green, SharedData.getInstance().getContext().getTheme()));
                 }
                 else{
                     serverStatus.setText("unreachable");
-                    serverStatus.setTextColor(getResources().getColor(R.color.red, data.getContext().getTheme()));
+                    serverStatus.setTextColor(getResources().getColor(R.color.red, SharedData.getInstance().getContext().getTheme()));
                 }
             });
         });
