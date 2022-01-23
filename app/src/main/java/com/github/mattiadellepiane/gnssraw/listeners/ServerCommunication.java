@@ -68,8 +68,6 @@ public class ServerCommunication extends MeasurementListener {
             Log.v(getDebugTag(), "Invio messaggio al server");
             executor.execute(() -> {
                 if(out != null) {
-                    if(s.contains("#"))
-                        Log.v("PROVA", "invio header");
                     out.println(s);
                 }
             });

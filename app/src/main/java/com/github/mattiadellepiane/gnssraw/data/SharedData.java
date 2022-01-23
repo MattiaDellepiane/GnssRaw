@@ -29,15 +29,6 @@ public class SharedData{
     private ServerCommunication serverCommunication;
     private Context context;
     private FilesFragment filesFragment;
-    //private FilesFragment filesFragment;
-
-    /*public FilesFragment getFilesFragment(){
-        return filesFragment;
-    }
-
-    public void setFilesFragment(FilesFragment filesFragment){
-        this.filesFragment = filesFragment;
-    }*/
 
     public FilesFragment getFilesFragment(){
         return filesFragment;

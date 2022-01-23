@@ -1,5 +1,7 @@
 package com.github.mattiadellepiane.gnssraw.ui.main.tabs;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mattiadellepiane.gnssraw.R;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -67,27 +71,33 @@ public class FilesFragment extends Fragment {
         View fragment = inflater.inflate(R.layout.fragment_files, container, false);
 
         layout = fragment.findViewById(R.id.filesLinearLayout);
+        File[] f = getFiles();
+        if(f != null) {
+            List<File> files = new ArrayList<>(Arrays.asList(f));
+            Collections.sort(files, Comparator.comparing(File::lastModified));
+            Collections.sort(files, Collections.reverseOrder());
 
-        List<File> files = new ArrayList<>(Arrays.asList(getFiles()));
-        Collections.sort(files, Comparator.comparing(File::lastModified));
-        Collections.sort(files, Collections.reverseOrder());
+            for (File p : files) {
+                TextView v = new TextView(getContext());
+                v.setText(p.getName());
+                v.setPadding(0, 50, 0, 50);
+                View divider = new View(getContext());
 
-        for (File p : files) {
-            TextView v = new TextView(getContext());
-            v.setText(p.getName());
-            v.setPadding(0, 50, 0, 50);
-            View divider = new View(getContext());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, 1);
 
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, 1);
-
-            divider.setBackgroundColor(getResources().getColor(R.color.dividerColor, getContext().getTheme()));
-            divider.setLayoutParams(lp);
-            v.setOnClickListener(view ->{
-                openFile(p.getName());
-            });
-            layout.addView(v);
-            layout.addView(divider);
+                divider.setBackgroundColor(getResources().getColor(R.color.dividerColor, getContext().getTheme()));
+                divider.setLayoutParams(lp);
+                v.setOnClickListener(view -> {
+                    openFile(p.getName());
+                });
+                v.setOnLongClickListener(view -> {
+                    showDeleteFileDialog(p.getName(), view, divider);
+                    return true;
+                });
+                layout.addView(v);
+                layout.addView(divider);
+            }
         }
 
         return fragment;
@@ -131,7 +141,32 @@ public class FilesFragment extends Fragment {
         v.setOnClickListener(view ->{
             openFile(currentFileName);
         });
+        v.setOnLongClickListener(view -> {
+            showDeleteFileDialog(currentFileName, view, divider);
+            return true;
+        });
         layout.addView(divider, 0);
         layout.addView(v, 0);
+    }
+
+    private void showDeleteFileDialog(String fileName, View v, View divider) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete file")
+                .setMessage("Are you sure you want to delete '" + fileName + "'?")
+
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    if(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.app_documents_folder), fileName).delete()) {
+                        layout.removeView(v);
+                        layout.removeView(divider);
+                    }
+                    else{
+                        Snackbar.make(this.getView(), "Error deleting the file", Snackbar.LENGTH_LONG).show();
+                    }
+                })
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }
