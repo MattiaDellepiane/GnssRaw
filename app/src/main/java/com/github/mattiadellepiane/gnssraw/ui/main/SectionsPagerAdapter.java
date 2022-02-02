@@ -9,6 +9,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.FilesFragment;
+import com.github.mattiadellepiane.gnssraw.ui.main.tabs.MapsFragment;
 import com.github.mattiadellepiane.gnssraw.utils.gnss.RealTimePositionVelocityCalculator;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.MeasurementFragment;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.PlotFragment;
@@ -21,12 +22,13 @@ import com.github.mattiadellepiane.gnssraw.ui.main.tabs.SettingsFragment;
 public class SectionsPagerAdapter extends FragmentStateAdapter {
 
     @StringRes
-    public static final int[] TAB_TITLES = new int[] {R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4};
+    public static final int[] TAB_TITLES = new int[] {R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4, R.string.tab_text_5};
 
     private MeasurementFragment mf;
     private PlotFragment pf;
     private SettingsFragment sf;
     private FilesFragment ff;
+    private MapsFragment maps;
 
     public SectionsPagerAdapter(FragmentActivity fa, RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator) {
         super(fa);
@@ -35,6 +37,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
         mRealTimePositionVelocityCalculator.setPlotFragment(pf);
         sf = new SettingsFragment();
         ff = new FilesFragment();
+        maps = new MapsFragment();
         SharedData.getInstance().setFilesFragment(ff);
     }
 
@@ -47,8 +50,10 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
             case 1:
                 return pf;
             case 2:
-                return ff;
+                return maps;
             case 3:
+                return ff;
+            case 4:
                 return sf;
         }
         return null;
@@ -56,7 +61,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 4;
+        return TAB_TITLES.length;
     }
 
 }

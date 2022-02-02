@@ -3,8 +3,9 @@
     <string name="app_version">1.0</string>
     <string name="tab_text_1">Measurements</string>
     <string name="tab_text_2">Plot</string>
-    <string name="tab_text_3">Files</string>
-    <string name="tab_text_4">Settings</string>
+    <string name="tab_text_3">Maps</string>
+    <string name="tab_text_4">Files</string>
+    <string name="tab_text_5">Settings</string>
     <string name="require_permissions">GnssRaw needs specified permissions</string>
     <string name="debug_tag">com.github.dellepianemattia.gnssraw</string>
     <string name="app_documents_folder">/GnssRaw</string>
