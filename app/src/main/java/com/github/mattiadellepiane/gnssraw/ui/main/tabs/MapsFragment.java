@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsFragment extends Fragment {
+
+    private GoogleMap googleMap;
+    private Marker lastMarker;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -32,9 +37,10 @@ public class MapsFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            MapsFragment.this.googleMap = googleMap;
+            //LatLng sydney = new LatLng(-34, 151);
+            //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         }
     };
 
@@ -54,5 +60,13 @@ public class MapsFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+    }
+
+    public void update(Location location){
+        LatLng tmp = new LatLng(location.getLatitude(), location.getLongitude());
+        if(lastMarker != null)
+            lastMarker.remove();
+        lastMarker = googleMap.addMarker(new MarkerOptions().position(tmp));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(tmp));
     }
 }

@@ -45,6 +45,11 @@ public abstract class MeasurementListener {
                         location.getAccuracy(),
                         location.getTime());
         write(locationStream);
+        updateMaps(location);
+    }
+
+    private void updateMaps(Location location){
+        SharedData.getInstance().getMapsFragment().update(location);
     }
 
     public void onGnssMeasurementsReceived(GnssMeasurementsEvent event){

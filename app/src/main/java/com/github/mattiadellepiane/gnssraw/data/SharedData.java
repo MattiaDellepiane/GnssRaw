@@ -10,6 +10,7 @@ import com.github.mattiadellepiane.gnssraw.MeasurementProvider;
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.listeners.ServerCommunication;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.FilesFragment;
+import com.github.mattiadellepiane.gnssraw.ui.main.tabs.MapsFragment;
 
 public class SharedData{
     //Singleton
@@ -29,6 +30,7 @@ public class SharedData{
     private ServerCommunication serverCommunication;
     private Context context;
     private FilesFragment filesFragment;
+    private MapsFragment mapsFragment;
 
     public FilesFragment getFilesFragment(){
         return filesFragment;
@@ -36,6 +38,14 @@ public class SharedData{
 
     public void setFilesFragment(FilesFragment filesFragment){
         this.filesFragment = filesFragment;
+    }
+
+    public MapsFragment getMapsFragment(){
+        return mapsFragment;
+    }
+
+    public void setMapsFragment(MapsFragment mapsFragment){
+        this.mapsFragment = mapsFragment;
     }
 
     public Context getContext(){

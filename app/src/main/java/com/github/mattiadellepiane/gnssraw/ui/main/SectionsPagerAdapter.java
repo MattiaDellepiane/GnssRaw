@@ -39,6 +39,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
         ff = new FilesFragment();
         maps = new MapsFragment();
         SharedData.getInstance().setFilesFragment(ff);
+        SharedData.getInstance().setMapsFragment(maps);
     }
 
     @NonNull
