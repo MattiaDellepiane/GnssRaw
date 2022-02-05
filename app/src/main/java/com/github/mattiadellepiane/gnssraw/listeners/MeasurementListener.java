@@ -45,10 +45,6 @@ public abstract class MeasurementListener {
                         location.getAccuracy(),
                         location.getTime());
         write(locationStream);
-        updateMaps(location);
-    }
-
-    private void updateMaps(Location location){
         SharedData.getInstance().getMapsFragment().update(location);
     }
 
@@ -165,7 +161,7 @@ public abstract class MeasurementListener {
                 .append(COMMENT_START)
                 .append("\n")
                 .append(COMMENT_START)
-                .append("Raw,ElapsedRealtimeMillis,TimeNanos,LeapSecond,TimeUncertaintyNanos,FullBiasNanos,"
+                .append("Raw,UTCTimeMillis,TimeNanos,LeapSecond,TimeUncertaintyNanos,FullBiasNanos,"
                         + "BiasNanos,BiasUncertaintyNanos,DriftNanosPerSecond,DriftUncertaintyNanosPerSecond,"
                         + "HardwareClockDiscontinuityCount,Svid,TimeOffsetNanos,State,ReceivedSvTimeNanos,"
                         + "ReceivedSvTimeUncertaintyNanos,Cn0DbHz,PseudorangeRateMetersPerSecond,"

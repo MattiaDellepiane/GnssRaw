@@ -10,6 +10,9 @@
     <string name="debug_tag">com.github.dellepianemattia.gnssraw</string>
     <string name="app_documents_folder">/GnssRaw</string>
 
+    <string name="option_1">Invia</string>
+    <string name="option_2">Elimina</string>
+
     <!-- Home Measurements fragment-->
     <string name="server_status_label">Server status:</string>
     <string name="sending_data">Logging data...</string>

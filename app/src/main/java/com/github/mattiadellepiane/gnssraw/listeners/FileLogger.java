@@ -46,7 +46,7 @@ public class FileLogger extends MeasurementListener{
 
     @Override
     protected void write(String s) {
-        if(out != null)
+        if(out != null && SharedData.getInstance().isListeningForMeasurements())
             out.println(s);
     }
 

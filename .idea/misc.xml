@@ -3,12 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.23645833333333333" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/drawable/ic_launcher_background.xml" value="0.23645833333333333" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/drawable/ic_launcher_nuovo_background.xml" value="0.23645833333333333" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/bottom_sheet_fileoptions.xml" value="0.5" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_files.xml" value="0.36666666666666664" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_main.xml" value="0.36666666666666664" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_measurements.xml" value="0.33" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_plot.xml" value="0.36666666666666664" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_settings.xml" value="0.36666666666666664" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/managefile_popup.xml" value="0.33" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/menu/menu_file_options.xml" value="0.25" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.23645833333333333" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.23645833333333333" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/xml/provider_paths.xml" value="0.2015625" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/xml/root_preferences.xml" value="0.36666666666666664" />
       </map>

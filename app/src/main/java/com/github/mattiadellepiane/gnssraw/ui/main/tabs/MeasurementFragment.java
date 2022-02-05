@@ -51,9 +51,7 @@ public class MeasurementFragment extends Fragment {
         });
 
         Button pingServerButton = fragment.findViewById(R.id.pingServerButton);
-        pingServerButton.setOnClickListener(view -> {
-            checkServerStatus();
-        });
+        pingServerButton.setOnClickListener(view -> checkServerStatus());
 
         checkServerStatus();
         return fragment;
