@@ -8,10 +8,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,17 +34,19 @@ public class MeasurementFragment extends Fragment {
         serverStatus = fragment.findViewById(R.id.serverStatus);
         sendingData = fragment.findViewById(R.id.sendingData);
 
-        Button startStop = fragment.findViewById(R.id.startStop);
+        MaterialButton startStop = fragment.findViewById(R.id.startStop);
         startStop.setOnClickListener(view -> {
             if(SharedData.getInstance().isListeningForMeasurements()){
                 sendingData.setText("");
                 startStop.setText("START");
+                startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_start));
                 startStop.setBackgroundColor(getResources().getColor(R.color.green,SharedData.getInstance().getContext().getTheme()));
                 SharedData.getInstance().stopMeasurements();
             }
             else{
                 sendingData.setText(R.string.sending_data);
                 startStop.setText("STOP");
+                startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_stop));
                 startStop.setBackgroundColor(getResources().getColor(R.color.red,SharedData.getInstance().getContext().getTheme()));
                 plotFragment.restartChart();
                 SharedData.getInstance().startMeasurements();

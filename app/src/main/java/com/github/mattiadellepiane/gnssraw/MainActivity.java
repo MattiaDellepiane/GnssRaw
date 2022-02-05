@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_launcher_foreground);// set drawable icon
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         SharedData.getInstance().setContext(this.getApplicationContext());
         serverCommunication = new ServerCommunication();
         fileLogger = new FileLogger();
