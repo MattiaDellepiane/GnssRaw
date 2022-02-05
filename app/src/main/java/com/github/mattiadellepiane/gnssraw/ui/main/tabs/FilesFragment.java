@@ -11,6 +11,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,6 +113,10 @@ public class FilesFragment extends Fragment {
         linearLayout.setGravity(Gravity.CENTER);
         TextView v = new TextView(getContext());
         v.setText(fileName);
+        TypedValue selectableItemBackground = new TypedValue();
+        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, selectableItemBackground, true);
+        v.setBackgroundResource(selectableItemBackground.resourceId);
+        v.setClickable(true);
         v.setPadding(0, 70, 0, 70);
         //Divide file views with a line
         View divider = new View(getContext());
@@ -132,7 +137,8 @@ public class FilesFragment extends Fragment {
         ImageButton imgBtn = new ImageButton(getContext());
         imgBtn.setImageResource(R.drawable.file_options);
         imgBtn.setPadding(50,50,50,50);
-        imgBtn.setBackground(getResources().getDrawable(R.drawable.transparent_background, getContext().getTheme()));
+        //imgBtn.setBackground(getResources().getDrawable(R.drawable.transparent_background, getContext().getTheme()));
+        imgBtn.setBackgroundResource(selectableItemBackground.resourceId);
         imgBtn.setOnClickListener(view -> {
             showFileOptions(fileName);
         });
@@ -165,8 +171,10 @@ public class FilesFragment extends Fragment {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_fileoptions);
 
+        TextView fileTextView = bottomSheetDialog.findViewById(R.id.filename_placeholder);
         LinearLayout share = bottomSheetDialog.findViewById(R.id.share);
         LinearLayout delete = bottomSheetDialog.findViewById(R.id.delete);
+        fileTextView.setText(fileName);
 
         //Set listeners
         share.setOnClickListener(view -> {
@@ -185,7 +193,7 @@ public class FilesFragment extends Fragment {
         });
 
         delete.setOnClickListener(view -> {
-            deleteFile(fileName);
+            showDeleteFileDialog(fileName);
             bottomSheetDialog.dismiss();
         });
 
