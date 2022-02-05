@@ -40,14 +40,14 @@ public class MeasurementFragment extends Fragment {
                 sendingData.setText("");
                 startStop.setText("START");
                 startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_start));
-                startStop.setBackgroundColor(getResources().getColor(R.color.green,SharedData.getInstance().getContext().getTheme()));
+                startStop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
                 SharedData.getInstance().stopMeasurements();
             }
             else{
                 sendingData.setText(R.string.sending_data);
                 startStop.setText("STOP");
                 startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_stop));
-                startStop.setBackgroundColor(getResources().getColor(R.color.red,SharedData.getInstance().getContext().getTheme()));
+                startStop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
                 plotFragment.restartChart();
                 SharedData.getInstance().startMeasurements();
             }
@@ -63,7 +63,7 @@ public class MeasurementFragment extends Fragment {
 
     private void checkServerStatus(){
         serverStatus.setText("pinging...");
-        serverStatus.setTextColor(getResources().getColor(R.color.black, SharedData.getInstance().getContext().getTheme()));
+        serverStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         executor.execute(() -> {
@@ -71,11 +71,11 @@ public class MeasurementFragment extends Fragment {
             getActivity().runOnUiThread(()->{
                 if(reachable){
                     serverStatus.setText("reachable");
-                    serverStatus.setTextColor(getResources().getColor(R.color.green, SharedData.getInstance().getContext().getTheme()));
+                    serverStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.green));
                 }
                 else{
                     serverStatus.setText("unreachable");
-                    serverStatus.setTextColor(getResources().getColor(R.color.red, SharedData.getInstance().getContext().getTheme()));
+                    serverStatus.setTextColor(ContextCompat.getColor(getContext(), R.color.red));
                 }
             });
         });

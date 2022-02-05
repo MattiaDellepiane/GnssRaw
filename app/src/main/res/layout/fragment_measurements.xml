@@ -59,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:backgroundTint="@android:color/darker_gray"
                 android:text="Update"
                 app:icon="@android:drawable/ic_popup_sync" />
         </LinearLayout>

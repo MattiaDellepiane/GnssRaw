@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
@@ -122,9 +123,9 @@ public class FilesFragment extends Fragment {
         View divider = new View(getContext());
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                ViewGroup.LayoutParams.MATCH_PARENT, 5);
 
-        divider.setBackgroundColor(getResources().getColor(R.color.dividerColor, getContext().getTheme()));
+        divider.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dividerColor));
         divider.setLayoutParams(lp);
         v.setOnClickListener(view ->{
             openFile(fileName);
@@ -137,7 +138,6 @@ public class FilesFragment extends Fragment {
         ImageButton imgBtn = new ImageButton(getContext());
         imgBtn.setImageResource(R.drawable.file_options);
         imgBtn.setPadding(50,50,50,50);
-        //imgBtn.setBackground(getResources().getDrawable(R.drawable.transparent_background, getContext().getTheme()));
         imgBtn.setBackgroundResource(selectableItemBackground.resourceId);
         imgBtn.setOnClickListener(view -> {
             showFileOptions(fileName);
@@ -145,6 +145,7 @@ public class FilesFragment extends Fragment {
         //Set tags used for removing views when the user deletes a file
         linearLayout.setTag(fileName + "_layout");
         divider.setTag(fileName + "_divider");
+
         //Add the previous created views to the layout
         linearLayout.addView(imgBtn);
         linearLayout.addView(v, 0);
