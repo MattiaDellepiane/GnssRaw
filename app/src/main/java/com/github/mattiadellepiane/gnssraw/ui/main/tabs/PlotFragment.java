@@ -32,6 +32,7 @@ import android.util.ArrayMap;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mattiadellepiane.gnssraw.R;
+import com.github.mattiadellepiane.gnssraw.data.SharedData;
+import com.github.mattiadellepiane.gnssraw.debug.AllCallbacksBase;
 import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsNavigationMessageStore;
 
 import org.achartengine.ChartFactory;
@@ -63,7 +66,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /** A plot fragment to show real-time Gnss analysis migrated from GnssAnalysis Tool. */
-public class PlotFragment extends Fragment {
+public class PlotFragment extends AllCallbacksBase {
 
   /** Total number of kinds of plot tabs */
   private static final int NUMBER_OF_TABS = 2;
@@ -113,7 +116,7 @@ public class PlotFragment extends Fragment {
     View plotView = inflater.inflate(R.layout.fragment_plot, container, false /* attachToRoot */);
 
     mDataSetManager
-        = new DataSetManager(NUMBER_OF_TABS, NUMBER_OF_CONSTELLATIONS, getContext(), mColorMap);
+        = new DataSetManager(NUMBER_OF_TABS, NUMBER_OF_CONSTELLATIONS, mColorMap);
 
     // Set UI elements handlers
     spinner = plotView.findViewById(R.id.constellation_spinner);
@@ -154,16 +157,20 @@ public class PlotFragment extends Fragment {
     mAnalysisView.setTextColor(Color.BLACK);
     mLayout = plotView.findViewById(R.id.plot);
     mLayout.addView(mChartView);
+    SharedData.getInstance().setPlotFragment(this);
+    /*if(savedInstanceState == null)
+      SharedData.getInstance().setPlotFragment(this);
+    else
+      Log.v("prova", "esisteva già");*/
     return plotView;
   }
 
   public void restartChart(){
-
     if (mChartView != null) {
       mLayout.removeView(mChartView);
     }
     mDataSetManager
-            = new DataSetManager(NUMBER_OF_TABS, NUMBER_OF_CONSTELLATIONS, getContext(), mColorMap);
+            = new DataSetManager(NUMBER_OF_TABS, NUMBER_OF_CONSTELLATIONS, mColorMap);
     XYMultipleSeriesDataset currentDataSet
             = mDataSetManager.getDataSet(mCurrentTab, DATA_SET_INDEX_ALL);
     mCurrentTab = tabSpinner.getSelectedItemPosition();
@@ -363,16 +370,13 @@ public class PlotFragment extends Fragment {
     private final List<ArrayMap<Integer, Integer>>[] mSatelliteConstellationIndex;
     private final List<XYMultipleSeriesDataset>[] mDataSetList;
     private final List<XYMultipleSeriesRenderer>[] mRendererList;
-    private final Context mContext;
     private final ColorMap mColorMap;
 
-    public DataSetManager(int numberOfTabs, int numberOfConstellations,
-        Context context, ColorMap colorMap) {
+    public DataSetManager(int numberOfTabs, int numberOfConstellations, ColorMap colorMap) {
       mDataSetList = new ArrayList[numberOfTabs];
       mRendererList = new ArrayList[numberOfTabs];
       mSatelliteIndex = new ArrayList[numberOfTabs];
       mSatelliteConstellationIndex = new ArrayList[numberOfTabs];
-      mContext = context;
       mColorMap = colorMap;
 
       // Preparing data sets and renderer for all six constellations
@@ -492,7 +496,7 @@ public class PlotFragment extends Fragment {
       renderer.setPanEnabled(false, true);
       renderer.setClickEnabled(false);
       renderer.setMarginsColor(Color.WHITE);
-      renderer.setChartTitle(mContext.getResources()
+      renderer.setChartTitle(SharedData.getInstance().getContext().getResources()
           .getStringArray(R.array.plot_titles)[tabNumber]);
       renderer.setChartTitleTextSize(50);
     }

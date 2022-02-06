@@ -3,6 +3,7 @@ package com.github.mattiadellepiane.gnssraw.data;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.preference.PreferenceManager;
 
@@ -11,12 +12,14 @@ import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.listeners.ServerCommunication;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.FilesFragment;
 import com.github.mattiadellepiane.gnssraw.ui.main.tabs.MapsFragment;
+import com.github.mattiadellepiane.gnssraw.ui.main.tabs.PlotFragment;
 
 public class SharedData{
     //Singleton
     private SharedData(){}
 
     public static SharedData getInstance(){
+        Log.v("singleton", String.valueOf(BillPughSingleton.INSTANCE));
         return BillPughSingleton.INSTANCE;
     }
 
@@ -31,6 +34,7 @@ public class SharedData{
     private Context context;
     private FilesFragment filesFragment;
     private MapsFragment mapsFragment;
+    private PlotFragment plotFragment;
 
     public FilesFragment getFilesFragment(){
         return filesFragment;
@@ -38,6 +42,14 @@ public class SharedData{
 
     public void setFilesFragment(FilesFragment filesFragment){
         this.filesFragment = filesFragment;
+    }
+
+    public PlotFragment getPlotFragment(){
+        return plotFragment;
+    }
+
+    public void setPlotFragment(PlotFragment plotFragment){
+        this.plotFragment = plotFragment;
     }
 
     public MapsFragment getMapsFragment(){

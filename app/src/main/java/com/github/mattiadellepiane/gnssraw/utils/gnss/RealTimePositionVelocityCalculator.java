@@ -29,6 +29,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.github.mattiadellepiane.gnssraw.MainActivity;
+import com.github.mattiadellepiane.gnssraw.data.SharedData;
 import com.github.mattiadellepiane.gnssraw.listeners.MeasurementListener;
 import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsMathOperations;
 import com.github.mattiadellepiane.gnssraw.utils.pseudorange.GpsNavigationMessageStore;
@@ -276,7 +277,7 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
                 new Runnable() {
                   @Override
                   public void run() {
-                    mPlotFragment.updateCnoTab(event);
+                    SharedData.getInstance().getPlotFragment().updateCnoTab(event);
                   }
                 });
             if (mPseudorangePositionVelocityFromRealTimeEvents == null) {
@@ -299,7 +300,7 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
                     new Runnable() {
                       @Override
                       public void run() {
-                        mPlotFragment.updatePseudorangeResidualTab(
+                        SharedData.getInstance().getPlotFragment().updatePseudorangeResidualTab(
                             mPseudorangePositionVelocityFromRealTimeEvents
                                 .getPseudorangeResidualsMeters(),
                             TimeUnit.NANOSECONDS.toSeconds(
@@ -313,7 +314,7 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
                       @Override
                       public void run() {
                         // Here we create gaps when the residual plot is disabled
-                        mPlotFragment.updatePseudorangeResidualTab(
+                        SharedData.getInstance().getPlotFragment().updatePseudorangeResidualTab(
                             GpsMathOperations.createAndFillArray(
                                 GpsNavigationMessageStore.MAX_NUMBER_OF_SATELLITES, Double.NaN),
                             TimeUnit.NANOSECONDS.toSeconds(

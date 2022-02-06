@@ -12,6 +12,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mattiadellepiane.gnssraw.R;
+import com.github.mattiadellepiane.gnssraw.data.SharedData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -50,7 +52,6 @@ public class FilesFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static FilesFragment newInstance(/*String param1, String param2*/) {
         /*FilesFragment fragment = new FilesFragment();
         Bundle args = new Bundle();
@@ -83,7 +84,7 @@ public class FilesFragment extends Fragment {
             Collections.sort(files, Comparator.comparing(File::lastModified));
             files.forEach(p -> addFileView(p.getName()));
         }
-
+        SharedData.getInstance().setFilesFragment(this);
         return fragment;
     }
 

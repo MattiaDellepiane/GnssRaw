@@ -1,5 +1,7 @@
 package com.github.mattiadellepiane.gnssraw.ui.main;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -23,6 +25,7 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
 
     @StringRes
     public static final int[] TAB_TITLES = new int[] {R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3, R.string.tab_text_4, R.string.tab_text_5};
+    private final RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator;
 
     private MeasurementFragment mf;
     private PlotFragment pf;
@@ -32,14 +35,16 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
 
     public SectionsPagerAdapter(FragmentActivity fa, RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator) {
         super(fa);
-        pf = new PlotFragment();
-        mf = new MeasurementFragment(pf);
-        mRealTimePositionVelocityCalculator.setPlotFragment(pf);
-        sf = new SettingsFragment();
-        ff = new FilesFragment();
-        maps = new MapsFragment();
-        SharedData.getInstance().setFilesFragment(ff);
-        SharedData.getInstance().setMapsFragment(maps);
+        this.mRealTimePositionVelocityCalculator = mRealTimePositionVelocityCalculator;
+        //pf = new PlotFragment();
+        //mf = new MeasurementFragment();
+        //mRealTimePositionVelocityCalculator.setPlotFragment(pf);
+        //sf = new SettingsFragment();
+        //ff = new FilesFragment();
+        //maps = new MapsFragment();
+        //SharedData.getInstance().setFilesFragment(ff);
+        //SharedData.getInstance().setMapsFragment(maps);
+        //SharedData.getInstance().setPlotFragment(pf);
     }
 
     @NonNull
@@ -47,15 +52,18 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch(position){
             case 0:
-                return mf;
+                return new MeasurementFragment();
             case 1:
-                return pf;
+                PlotFragment p = new PlotFragment();
+                mRealTimePositionVelocityCalculator.setPlotFragment(p);
+                Log.v("prova", String.valueOf(p));
+                return p;
             case 2:
-                return maps;
+                return new MapsFragment();
             case 3:
-                return ff;
+                return new FilesFragment();
             case 4:
-                return sf;
+                return new SettingsFragment();
         }
         return null;
     }

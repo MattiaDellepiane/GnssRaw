@@ -21,10 +21,9 @@ import java.util.concurrent.Executors;
 public class MeasurementFragment extends Fragment {
 
     private TextView serverStatus, sendingData;
-    private PlotFragment plotFragment;
 
-    public MeasurementFragment(PlotFragment plotFragment) {
-        this.plotFragment = plotFragment;
+    public MeasurementFragment() {
+
     }
 
 
@@ -48,7 +47,8 @@ public class MeasurementFragment extends Fragment {
                 startStop.setText("STOP");
                 startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_stop));
                 startStop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
-                plotFragment.restartChart();
+                if(SharedData.getInstance().getPlotFragment() != null)
+                    SharedData.getInstance().getPlotFragment().restartChart();
                 SharedData.getInstance().startMeasurements();
             }
 

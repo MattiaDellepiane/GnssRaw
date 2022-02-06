@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mattiadellepiane.gnssraw.R;
+import com.github.mattiadellepiane.gnssraw.data.SharedData;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,7 +47,9 @@ public class MapsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_maps, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_maps, container, false);
+        SharedData.getInstance().setMapsFragment(this);
+        return fragmentView;
     }
 
     @Override

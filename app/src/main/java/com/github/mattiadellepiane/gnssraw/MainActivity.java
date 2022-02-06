@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             tab.setText(sectionsPagerAdapter.TAB_TITLES[position]);
         }).attach();
 
-
+        //mRealTimePositionVelocityCalculator.setPlotFragment(SharedData.getInstance().getPlotFragment());
         checkAndHandlePermissions();
     }
 
