@@ -115,6 +115,8 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
    */
   @Override
   public void onLocationChanged(final Location location) {
+    if(!SharedData.getInstance().isListeningForMeasurements())
+      return;
     if (location.getProvider().equals(LocationManager.NETWORK_PROVIDER)) {
       final Runnable r =
           new Runnable() {
@@ -268,6 +270,8 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
 
   @Override
   public void onGnssMeasurementsReceived(final GnssMeasurementsEvent event) {
+    if(!SharedData.getInstance().isListeningForMeasurements())
+      return;
     mAllowShowingRawResults = true;
     final Runnable r =
         new Runnable() {
@@ -277,7 +281,8 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
                 new Runnable() {
                   @Override
                   public void run() {
-                    SharedData.getInstance().getPlotFragment().updateCnoTab(event);
+                    if(SharedData.getInstance().getPlotFragment() != null)
+                      SharedData.getInstance().getPlotFragment().updateCnoTab(event);
                   }
                 });
             if (mPseudorangePositionVelocityFromRealTimeEvents == null) {
@@ -300,7 +305,8 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
                     new Runnable() {
                       @Override
                       public void run() {
-                        SharedData.getInstance().getPlotFragment().updatePseudorangeResidualTab(
+                        if(SharedData.getInstance().getPlotFragment() != null)
+                          SharedData.getInstance().getPlotFragment().updatePseudorangeResidualTab(
                             mPseudorangePositionVelocityFromRealTimeEvents
                                 .getPseudorangeResidualsMeters(),
                             TimeUnit.NANOSECONDS.toSeconds(
@@ -314,7 +320,8 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
                       @Override
                       public void run() {
                         // Here we create gaps when the residual plot is disabled
-                        SharedData.getInstance().getPlotFragment().updatePseudorangeResidualTab(
+                        if(SharedData.getInstance().getPlotFragment() != null)
+                          SharedData.getInstance().getPlotFragment().updatePseudorangeResidualTab(
                             GpsMathOperations.createAndFillArray(
                                 GpsNavigationMessageStore.MAX_NUMBER_OF_SATELLITES, Double.NaN),
                             TimeUnit.NANOSECONDS.toSeconds(
@@ -333,6 +340,8 @@ public class RealTimePositionVelocityCalculator extends MeasurementListener {
 
   @Override
   public void onGnssNavigationMessageReceived(GnssNavigationMessage event) {
+    if(!SharedData.getInstance().isListeningForMeasurements())
+      return;
     if (event.getType() == GnssNavigationMessage.TYPE_GPS_L1CA) {
       mPseudorangePositionVelocityFromRealTimeEvents.parseHwNavigationMessageUpdates(event);
     }

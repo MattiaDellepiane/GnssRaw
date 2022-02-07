@@ -1,6 +1,10 @@
 package com.github.mattiadellepiane.gnssraw.ui.main.tabs;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,8 @@ import androidx.fragment.app.Fragment;
 
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
+import com.github.mattiadellepiane.gnssraw.debug.AllCallbacksBase;
+import com.github.mattiadellepiane.gnssraw.services.BackgroundMeasurementService;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.concurrent.ExecutorService;
@@ -21,6 +27,7 @@ import java.util.concurrent.Executors;
 public class MeasurementFragment extends Fragment {
 
     private TextView serverStatus, sendingData;
+    private MaterialButton startStop;
 
     public MeasurementFragment() {
 
@@ -33,32 +40,53 @@ public class MeasurementFragment extends Fragment {
         serverStatus = fragment.findViewById(R.id.serverStatus);
         sendingData = fragment.findViewById(R.id.sendingData);
 
-        MaterialButton startStop = fragment.findViewById(R.id.startStop);
+        startStop = fragment.findViewById(R.id.startStop);
         startStop.setOnClickListener(view -> {
             if(SharedData.getInstance().isListeningForMeasurements()){
-                sendingData.setText("");
+                sendingData.setVisibility(View.INVISIBLE);
                 startStop.setText("START");
                 startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_start));
                 startStop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
-                SharedData.getInstance().stopMeasurements();
+                stopMeasurementService();
             }
             else{
-                sendingData.setText(R.string.sending_data);
+                sendingData.setVisibility(View.VISIBLE);
                 startStop.setText("STOP");
                 startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_stop));
                 startStop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
                 if(SharedData.getInstance().getPlotFragment() != null)
                     SharedData.getInstance().getPlotFragment().restartChart();
-                SharedData.getInstance().startMeasurements();
+                startMeasurementService();
             }
 
         });
+
+        if (SharedData.getInstance().isListeningForMeasurements()) {
+            sendingData.setVisibility(View.VISIBLE);
+            startStop.setText("STOP");
+            startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_stop));
+            startStop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
+        }
 
         Button pingServerButton = fragment.findViewById(R.id.pingServerButton);
         pingServerButton.setOnClickListener(view -> checkServerStatus());
 
         checkServerStatus();
         return fragment;
+    }
+
+    private void startMeasurementService(){
+        Context context = getContext().getApplicationContext();
+        Intent intent = new Intent(context, BackgroundMeasurementService.class); // Build the intent for the service
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        }
+    }
+
+    private void stopMeasurementService(){
+        Context context = getContext().getApplicationContext();
+        Intent serviceIntent = new Intent(context, BackgroundMeasurementService.class);
+        context.stopService(serviceIntent);
     }
 
     private void checkServerStatus(){
@@ -80,5 +108,4 @@ public class MeasurementFragment extends Fragment {
             });
         });
     }
-
 }

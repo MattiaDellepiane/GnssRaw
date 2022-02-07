@@ -36,15 +36,6 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
     public SectionsPagerAdapter(FragmentActivity fa, RealTimePositionVelocityCalculator mRealTimePositionVelocityCalculator) {
         super(fa);
         this.mRealTimePositionVelocityCalculator = mRealTimePositionVelocityCalculator;
-        //pf = new PlotFragment();
-        //mf = new MeasurementFragment();
-        //mRealTimePositionVelocityCalculator.setPlotFragment(pf);
-        //sf = new SettingsFragment();
-        //ff = new FilesFragment();
-        //maps = new MapsFragment();
-        //SharedData.getInstance().setFilesFragment(ff);
-        //SharedData.getInstance().setMapsFragment(maps);
-        //SharedData.getInstance().setPlotFragment(pf);
     }
 
     @NonNull
@@ -56,7 +47,6 @@ public class SectionsPagerAdapter extends FragmentStateAdapter {
             case 1:
                 PlotFragment p = new PlotFragment();
                 mRealTimePositionVelocityCalculator.setPlotFragment(p);
-                Log.v("prova", String.valueOf(p));
                 return p;
             case 2:
                 return new MapsFragment();

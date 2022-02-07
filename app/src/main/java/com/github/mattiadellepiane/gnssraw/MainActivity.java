@@ -3,9 +3,11 @@ package com.github.mattiadellepiane.gnssraw;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
 import com.github.mattiadellepiane.gnssraw.listeners.FileLogger;
+import com.github.mattiadellepiane.gnssraw.services.BackgroundMeasurementService;
 import com.github.mattiadellepiane.gnssraw.utils.gnss.RealTimePositionVelocityCalculator;
 import com.github.mattiadellepiane.gnssraw.listeners.ServerCommunication;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,18 +41,17 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_launcher_foreground);// set drawable icon
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SharedData.getInstance().setContext(this.getApplicationContext());
         serverCommunication = new ServerCommunication();
         fileLogger = new FileLogger();
-        //Set RealTimePositionVelocityCalculator
         mRealTimePositionVelocityCalculator = new RealTimePositionVelocityCalculator();
         mRealTimePositionVelocityCalculator.setMainActivity(this);
         mRealTimePositionVelocityCalculator.setResidualPlotMode(
-                RealTimePositionVelocityCalculator.RESIDUAL_MODE_DISABLED, null /* fixedGroundTruth */);
-        //
+                RealTimePositionVelocityCalculator.RESIDUAL_MODE_DISABLED,
+                null /* fixedGroundTruth */);
+
+
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, mRealTimePositionVelocityCalculator);
         ViewPager2 viewPager = binding.viewPager;
         viewPager.setUserInputEnabled(false);
@@ -61,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
             tab.setText(sectionsPagerAdapter.TAB_TITLES[position]);
         }).attach();
 
-        //mRealTimePositionVelocityCalculator.setPlotFragment(SharedData.getInstance().getPlotFragment());
         checkAndHandlePermissions();
     }
 
@@ -92,8 +92,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initMeasurementProvider(){
-        SharedData.getInstance().measurementProvider =
-                new MeasurementProvider(this, new SensorMeasurements(), serverCommunication, fileLogger, mRealTimePositionVelocityCalculator);
+        SharedData.getInstance().measurementProvider = new MeasurementProvider(
+                this,
+                new SensorMeasurements(),
+                serverCommunication,
+                fileLogger,
+                mRealTimePositionVelocityCalculator);
     }
 
+    @Override
+    protected void onDestroy() {
+        if(SharedData.getInstance().isListeningForMeasurements())
+            SharedData.getInstance().stopMeasurements();
+        super.onDestroy();
+    }
 }

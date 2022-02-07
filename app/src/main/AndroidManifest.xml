@@ -16,6 +16,7 @@
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.WRITE_GSERVICES" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
@@ -25,7 +26,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GnssRaw">
-
+        <service
+            android:name=".services.BackgroundMeasurementService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="location" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -34,9 +39,10 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-        
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -58,8 +64,10 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.GnssRaw.NoActionBar">
+            android:theme="@style/Theme.GnssRaw.NoActionBar"> <!-- launchMode singleTask serve per fare in modo che ci sia una sola istanza dell'activity,
+            altrimenti il ritorno da notifica (background GNSS) creaerebbe un'altra activity e altri listener ecc e farebbe casini-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

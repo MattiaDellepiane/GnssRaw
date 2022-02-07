@@ -66,7 +66,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /** A plot fragment to show real-time Gnss analysis migrated from GnssAnalysis Tool. */
-public class PlotFragment extends AllCallbacksBase {
+public class PlotFragment extends Fragment {
 
   /** Total number of kinds of plot tabs */
   private static final int NUMBER_OF_TABS = 2;
