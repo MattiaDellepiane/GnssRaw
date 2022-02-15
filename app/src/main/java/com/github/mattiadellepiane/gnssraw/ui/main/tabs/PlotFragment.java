@@ -192,6 +192,8 @@ public class PlotFragment extends Fragment {
    *  Updates the CN0 versus Time plot data from a {@link GnssMeasurement}
    */
   public void updateCnoTab(GnssMeasurementsEvent event) {
+    if(getContext() == null)
+      return;
     long timeInSeconds =
         TimeUnit.NANOSECONDS.toSeconds(event.getClock().getTimeNanos());
     if (mInitialTimeSeconds < 0) {
@@ -279,6 +281,8 @@ public class PlotFragment extends Fragment {
    * @param timeInSeconds the time at which measurements are received
    */
   public void updatePseudorangeResidualTab(double[] residuals, double timeInSeconds) {
+    if(getContext() == null)
+      return;
     double timeSinceLastMeasurement = timeInSeconds - mInitialTimeSeconds;
     for (int i = 1; i <= GpsNavigationMessageStore.MAX_NUMBER_OF_SATELLITES; i++) {
       if (!Double.isNaN(residuals[i - 1])) {

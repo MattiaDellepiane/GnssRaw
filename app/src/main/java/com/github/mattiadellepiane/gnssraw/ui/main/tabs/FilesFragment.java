@@ -1,9 +1,7 @@
 package com.github.mattiadellepiane.gnssraw.ui.main.tabs;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,7 +10,6 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,11 +18,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mattiadellepiane.gnssraw.R;
 import com.github.mattiadellepiane.gnssraw.data.SharedData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
@@ -38,6 +35,15 @@ import java.util.List;
 public class FilesFragment extends Fragment {
 
     private LinearLayout layout;
+    private List<String> selected;
+    private List<ImageButton> imgBtns;
+    private List<LinearLayout> linLayouts;
+    private Boolean isSelecting = false;
+    private View focusView;
+
+    FloatingActionButton clearSelection;
+    FloatingActionButton deleteSelection;
+    FloatingActionButton shareSelection;
 
     public FilesFragment() {
         // Required empty public constructor
@@ -53,6 +59,20 @@ public class FilesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragment = inflater.inflate(R.layout.fragment_files, container, false);
+
+        selected = new ArrayList<>();
+        imgBtns = new ArrayList<>();
+        linLayouts = new ArrayList<>();
+
+        clearSelection = fragment.findViewById(R.id.clearSelection);
+        deleteSelection = fragment.findViewById(R.id.deleteSelection);
+        shareSelection = fragment.findViewById(R.id.shareSelection);
+        focusView = fragment.findViewById(R.id.focusView);
+
+        clearSelection.setOnClickListener(view -> clearSelection());
+        deleteSelection.setOnClickListener(view -> showDeleteSelectedFilesDialog());
+        shareSelection.setOnClickListener(view -> shareSelection());
+
 
         layout = fragment.findViewById(R.id.filesLinearLayout);
         File[] f = getFiles();
@@ -85,11 +105,15 @@ public class FilesFragment extends Fragment {
     }
 
     public void addFileView(String fileName) {
+        if(getContext() == null)
+            return;
         //Linear layout containing name of file and button for options
         LinearLayout linearLayout = new LinearLayout(getContext());
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.setGravity(Gravity.CENTER);
+        linearLayout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.design_default_color_background));
+        linLayouts.add(linearLayout);
         TextView v = new TextView(getContext());
         v.setText(fileName);
         TypedValue selectableItemBackground = new TypedValue();
@@ -105,13 +129,6 @@ public class FilesFragment extends Fragment {
 
         divider.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dividerColor));
         divider.setLayoutParams(lp);
-        v.setOnClickListener(view ->{
-            openFile(fileName);
-        });
-        v.setOnLongClickListener(view -> {
-            showDeleteFileDialog(fileName);
-            return true;
-        });
         //More vert icon - file options
         ImageButton imgBtn = new ImageButton(getContext());
         imgBtn.setImageResource(R.drawable.file_options);
@@ -120,7 +137,36 @@ public class FilesFragment extends Fragment {
         imgBtn.setOnClickListener(view -> {
             showFileOptions(fileName);
         });
+        imgBtns.add(imgBtn);
+
+        v.setOnClickListener(view ->{
+            if(isSelecting){
+                if(selected.contains(fileName)){
+                    selected.remove(fileName);
+                    linearLayout.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.design_default_color_background));
+                    return;
+                }
+                selected.add(fileName);
+                linearLayout.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.darker_gray));
+                return;
+            }
+            openFile(fileName);
+        });
+        v.setOnLongClickListener(view -> {
+            if(!isSelecting) {
+                hideFileOptions();
+                clearSelection.setVisibility(View.VISIBLE);
+                deleteSelection.setVisibility(View.VISIBLE);
+                shareSelection.setVisibility(View.VISIBLE);
+                selected.add(fileName);
+                linearLayout.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.darker_gray));
+                isSelecting = true;
+                focusView.setVisibility(View.VISIBLE);
+            }
+            return true;
+        });
         //Set tags used for removing views when the user deletes a file
+        imgBtn.setTag(fileName + "_imgBtn");
         linearLayout.setTag(fileName + "_layout");
         divider.setTag(fileName + "_divider");
 
@@ -129,6 +175,14 @@ public class FilesFragment extends Fragment {
         linearLayout.addView(v, 0);
         layout.addView(divider, 0);
         layout.addView(linearLayout, 0);
+    }
+
+    private void hideFileOptions(){
+        imgBtns.forEach(imgBtn -> imgBtn.setVisibility(View.INVISIBLE));
+    }
+
+    private void showFileOptions(){
+        imgBtns.forEach(imgBtn -> imgBtn.setVisibility(View.VISIBLE));
     }
 
     private void showDeleteFileDialog(String fileName) { //Called on long click upon a file name
@@ -179,15 +233,75 @@ public class FilesFragment extends Fragment {
         bottomSheetDialog.show();
     }
 
+    private void clearSelection(){
+        isSelecting = false;
+        selected.clear();
+        focusView.setVisibility(View.INVISIBLE);
+        clearSelection.setVisibility(View.INVISIBLE);
+        deleteSelection.setVisibility(View.INVISIBLE);
+        shareSelection.setVisibility(View.INVISIBLE);
+        //Rimuovere colore di background a tutti i file
+        linLayouts.forEach(lay -> lay.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.design_default_color_background)));
+        showFileOptions();
+    }
+
+    private void deleteSelection(){
+        for(String file : selected){
+            deleteFile(file);
+        }
+        clearSelection();
+    }
+
+    private void shareSelection(){
+        ArrayList<Uri> uris = new ArrayList<>();
+        for(String file : selected){
+            Uri f = FileProvider.getUriForFile(
+                    getContext(),
+                    getActivity().getApplicationContext()
+                            .getPackageName() + ".provider", new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.app_documents_folder), file));
+            uris.add(f);
+        }
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        sendIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+        sendIntent.setType("text/plain");
+
+        clearSelection();
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
+    }
+
     private void deleteFile(String fileName){
         LinearLayout ll = getView().findViewWithTag(fileName + "_layout");
         View divider = getView().findViewWithTag(fileName + "_divider");
         if(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + getString(R.string.app_documents_folder), fileName).delete()) {
             layout.removeView(ll);
             layout.removeView(divider);
+            linLayouts.remove(ll);
+            for(ImageButton imgBtn : imgBtns){
+                if(imgBtn.getTag().toString().equalsIgnoreCase(fileName + "_imgBtn")){
+                    imgBtns.remove(imgBtn);
+                    break;
+                }
+            }
         }
         else{
             Snackbar.make(this.getView(), "Error deleting the file", Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    private void showDeleteSelectedFilesDialog() { //Called on long click upon a file name
+        new AlertDialog.Builder(getContext())
+                .setTitle("Delete files")
+                .setMessage("Are you sure you want to delete the selected files?")
+
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    deleteSelection();
+                })
+
+                // A null listener allows the button to dismiss the dialog and take no further action.
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 }

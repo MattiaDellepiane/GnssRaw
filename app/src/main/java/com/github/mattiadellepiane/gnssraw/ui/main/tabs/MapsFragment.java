@@ -62,10 +62,28 @@ public class MapsFragment extends Fragment {
     }
 
     public void update(Location location){
+        if(getContext() == null)
+            return;
         LatLng tmp = new LatLng(location.getLatitude(), location.getLongitude());
         if(lastMarker != null)
             lastMarker.remove();
         lastMarker = googleMap.addMarker(new MarkerOptions().position(tmp));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(tmp));
+    }
+
+    public void update(double lat, double lng){
+        getActivity().runOnUiThread(() -> {
+            if (getContext() == null)
+                return;
+            LatLng tmp = new LatLng(lat, lng);
+            if (lastMarker != null)
+                lastMarker.remove();
+            lastMarker = googleMap.addMarker(new MarkerOptions().position(tmp));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(tmp));
+        });
+    }
+
+    private double convertDegreeAngleToDouble(double degrees, double minutes, double seconds){
+        return degrees + (minutes/60) + (seconds/3600);
     }
 }

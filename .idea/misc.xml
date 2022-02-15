@@ -8,9 +8,10 @@
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/drawable/ic_launcher_nuovo_background.xml" value="0.23645833333333333" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/bottom_sheet_fileoptions.xml" value="0.5" />
-        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_files.xml" value="0.36666666666666664" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_files.xml" value="0.4911616161616162" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_main.xml" value="0.36666666666666664" />
-        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_measurements.xml" value="0.33" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_maps.xml" value="0.23177083333333334" />
+        <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_measurements.xml" value="0.25" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_plot.xml" value="0.36666666666666664" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/fragment_settings.xml" value="0.36666666666666664" />
         <entry key="..\:/NuoviProgrammi/AndroidApps/GnssRaw/app/src/main/res/layout/managefile_popup.xml" value="0.33" />

@@ -28,6 +28,7 @@ public class MeasurementFragment extends Fragment {
 
     private TextView serverStatus, sendingData;
     private MaterialButton startStop;
+    private Button upMap;
 
     public MeasurementFragment() {
 
@@ -39,6 +40,11 @@ public class MeasurementFragment extends Fragment {
         View fragment = inflater.inflate(R.layout.fragment_measurements, container, false);
         serverStatus = fragment.findViewById(R.id.serverStatus);
         sendingData = fragment.findViewById(R.id.sendingData);
+        upMap = fragment.findViewById(R.id.updateMap);
+
+        upMap.setOnClickListener(view -> {
+            SharedData.getInstance().getServerCommunication().getLocation();
+        });
 
         startStop = fragment.findViewById(R.id.startStop);
         startStop.setOnClickListener(view -> {
@@ -87,6 +93,14 @@ public class MeasurementFragment extends Fragment {
         Context context = getContext().getApplicationContext();
         Intent serviceIntent = new Intent(context, BackgroundMeasurementService.class);
         context.stopService(serviceIntent);
+    }
+
+    @Override
+    public void onDestroy() {
+        Context context = getContext().getApplicationContext();
+        Intent serviceIntent = new Intent(context, BackgroundMeasurementService.class);
+        context.stopService(serviceIntent);
+        super.onDestroy();
     }
 
     private void checkServerStatus(){
