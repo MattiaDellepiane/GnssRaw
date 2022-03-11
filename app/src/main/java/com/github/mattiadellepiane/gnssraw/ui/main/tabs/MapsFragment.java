@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -71,14 +73,30 @@ public class MapsFragment extends Fragment {
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(tmp));
     }
 
-    public void update(double lat, double lng){
+    public void update(double lat, double lng, int Q){
         getActivity().runOnUiThread(() -> {
+            Log.v("PROVAAA", String.valueOf(Q));
             if (getContext() == null)
                 return;
             LatLng tmp = new LatLng(lat, lng);
             if (lastMarker != null)
                 lastMarker.remove();
-            lastMarker = googleMap.addMarker(new MarkerOptions().position(tmp));
+            MarkerOptions markerOptions = null;
+            switch(Q){
+                case 1:
+                    markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    break;
+                case 2:
+                    markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                    break;
+                case 4:
+                    markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    break;
+                default:
+                    markerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    break;
+            }
+            lastMarker = googleMap.addMarker(markerOptions.position(tmp));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(tmp));
         });
     }

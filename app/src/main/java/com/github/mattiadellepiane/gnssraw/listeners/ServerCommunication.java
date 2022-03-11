@@ -112,7 +112,7 @@ public class ServerCommunication extends MeasurementListener {
                 PrintWriter out = new PrintWriter(s.getOutputStream(), true);
                 out.println("R");
                 String input = null;
-                while ((input = in.readLine()) != null) {
+                if ((input = in.readLine()) != null) {
                     String[] params = input.split("\\s+");
                     double lat = Double.parseDouble(params[2]);
                     double lng = Double.parseDouble(params[3]);
@@ -123,7 +123,7 @@ public class ServerCommunication extends MeasurementListener {
                     double sde = Double.parseDouble(params[8]);
                     double sdu = Double.parseDouble(params[9]);
                     if (SharedData.getInstance().getMapsFragment() != null) {
-                        SharedData.getInstance().getMapsFragment().update(lat, lng);
+                        SharedData.getInstance().getMapsFragment().update(lat, lng, qfix);
                     }
                 }
                 out.close();
