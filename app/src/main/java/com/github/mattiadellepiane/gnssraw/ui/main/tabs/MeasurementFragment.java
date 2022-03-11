@@ -53,6 +53,7 @@ public class MeasurementFragment extends Fragment {
                 startStop.setText("START");
                 startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_start));
                 startStop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.green));
+                upMap.setEnabled(false);
                 stopMeasurementService();
             }
             else{
@@ -60,6 +61,7 @@ public class MeasurementFragment extends Fragment {
                 startStop.setText("STOP");
                 startStop.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_stop));
                 startStop.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.red));
+                upMap.setEnabled(true);
                 if(SharedData.getInstance().getPlotFragment() != null)
                     SharedData.getInstance().getPlotFragment().restartChart();
                 startMeasurementService();

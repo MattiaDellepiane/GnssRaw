@@ -68,13 +68,15 @@ public class ServerCommunication extends MeasurementListener {
 
     @Override
     protected void write(String s){
+        Log.v("AAAA", s);
         if(SharedData.getInstance().isListeningForMeasurements() && SharedData.getInstance().isServerEnabled()) {
             Log.v(getDebugTag(), "Invio messaggio al server");
             executor.execute(() -> {
                 if(out != null) {
                     if(!headerSent) {
-                        getLocation();
                         headerSent = true;
+                    }else{
+                       // getLocation();
                     }
                     out.println(s);
                 }
@@ -85,22 +87,19 @@ public class ServerCommunication extends MeasurementListener {
 
     public boolean isReachable() {
         Socket s = null;
-        boolean reachable = false;
         try {
             s = new Socket();
             s.connect(new InetSocketAddress(SharedData.getInstance().getServerAddress(), SharedData.getInstance().getServerPort()),3000);
-            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            PrintWriter out = new PrintWriter(s.getOutputStream(), true);
-            out.println("PING");
-            String response = in.readLine();
-            if(response != null && response.equalsIgnoreCase("OK")){
-                reachable = true;
-            }
-            out.close();
         } catch (IOException e) {
             return false;
+        }finally {
+            try {
+                s.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        return reachable;
+        return true;
     }
 
     public void getLocation(){

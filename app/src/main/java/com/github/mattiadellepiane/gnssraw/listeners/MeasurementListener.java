@@ -25,7 +25,7 @@ public abstract class MeasurementListener {
 
     public final void startLogging(){
         initResources();
-        write(getHeader());
+        //write(getHeader());
     }
 
     public final void stopLogging(){
