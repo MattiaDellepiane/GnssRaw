@@ -1,6 +1,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <PreferenceCategory android:title="General">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="full_tracking"
+            android:title="@string/full_tracking"
+            app:enabled="false" />
+    </PreferenceCategory>
     <PreferenceCategory app:title="@string/loggers_header">
         <SwitchPreference
             android:defaultValue="false"

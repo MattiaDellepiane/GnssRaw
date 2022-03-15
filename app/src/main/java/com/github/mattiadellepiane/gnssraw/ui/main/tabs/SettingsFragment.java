@@ -25,6 +25,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             serverEditText.setEnabled(false);
             serverPort.setEnabled(false);
         }
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S){
+            SwitchPreference fullTracking = findPreference("full_tracking");
+            fullTracking.setEnabled(true);
+        }
     }
 
     private void setServerSwitchListener(){

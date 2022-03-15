@@ -20,8 +20,10 @@
 package com.github.mattiadellepiane.gnssraw;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.GnssMeasurementRequest;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssNavigationMessage;
 import android.location.Location;
@@ -31,10 +33,13 @@ import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
+import com.github.mattiadellepiane.gnssraw.data.SharedData;
 import com.github.mattiadellepiane.gnssraw.listeners.MeasurementListener;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class MeasurementProvider {
@@ -98,11 +103,12 @@ public class MeasurementProvider {
         };
     }
 
+    @SuppressLint("MissingPermission")
     public void registerLocation() {
         boolean isGpsProviderEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (isGpsProviderEnabled) {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 return;
             }
@@ -123,12 +129,21 @@ public class MeasurementProvider {
         locationManager.removeUpdates(locationListener);
     }
 
+    @SuppressLint("MissingPermission")
     public void registerAll() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         registerLocation();
-        locationManager.registerGnssMeasurementsCallback(gnssMeasurementsEventListener);
+        ExecutorService ex = Executors.newFixedThreadPool(2);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            GnssMeasurementRequest.Builder requestBuilder = new GnssMeasurementRequest.Builder().setFullTracking(SharedData.getInstance().getFullTracking());
+            Log.v("PROVA", "FullTracking: " + SharedData.getInstance().getFullTracking());
+            locationManager.registerGnssMeasurementsCallback(requestBuilder.build(), SharedData.getInstance().getContext().getMainExecutor(), gnssMeasurementsEventListener);
+        }
+        else{
+            locationManager.registerGnssMeasurementsCallback(gnssMeasurementsEventListener);
+        }
         locationManager.registerGnssNavigationMessageCallback(gnssNavigationMessageListener);
         Log.v(getDebugTag(), "Listener attivati");
         startLogging();

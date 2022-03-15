@@ -54,6 +54,7 @@
     <string name="enabled">Enabled</string>
     <string name="server_ip">Server\'s ip address</string>
     <string name="server_port">Server port</string>
+    <string name="full_tracking">Full tracking (Android 12+)</string>
 
     <!-- Default preferences values -->
     <string name="server_ip_default">0.0.0.0</string>

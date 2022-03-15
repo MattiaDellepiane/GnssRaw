@@ -110,7 +110,7 @@ public class ServerCommunication extends MeasurementListener {
                 s.connect(new InetSocketAddress(SharedData.getInstance().getServerAddress(), port), 3000);
                 BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 PrintWriter out = new PrintWriter(s.getOutputStream(), true);
-                out.println("R");
+                //out.println("R");
                 String input = null;
                 if ((input = in.readLine()) != null) {
                     String[] params = input.split("\\s+");

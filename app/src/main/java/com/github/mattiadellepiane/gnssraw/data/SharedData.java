@@ -103,6 +103,9 @@ public class SharedData{
     public String getServerAddress() {
         return PreferenceManager.getDefaultSharedPreferences(context).getString("server_address", context.getString(R.string.server_ip_default));
     }
+    public boolean getFullTracking() {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("full_tracking", false);
+    }
     public int getServerPort() {
         int port;
         try{
