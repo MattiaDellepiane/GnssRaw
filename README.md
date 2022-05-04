@@ -6,7 +6,7 @@ This project includes some files from Google's https://github.com/google/gps-mea
 
 
 ## Server
-
+test commit
 Directory: GnssServer
 Commands:
 - stop: close the server
