@@ -76,7 +76,7 @@ public class ServerCommunication extends MeasurementListener {
                     if(!headerSent) {
                         headerSent = true;
                     }else{
-                       // getLocation();
+                        getLocation();
                     }
                     out.println(s);
                 }
