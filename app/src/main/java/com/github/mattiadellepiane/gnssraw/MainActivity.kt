@@ -68,12 +68,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initMeasurementProvider() {
-        SharedData.instance.measurementProvider = MeasurementProvider(
-                this,
-                SensorMeasurements(),
-                serverCommunication,
-                fileLogger,
-                mRealTimePositionVelocityCalculator)
+        SharedData.instance.measurementProvider = serverCommunication?.let {
+            fileLogger?.let { it1 ->
+                mRealTimePositionVelocityCalculator?.let { it2 ->
+                    MeasurementProvider(
+                            this,
+                            SensorMeasurements(),
+                            it,
+                            it1,
+                            it2)
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
